@@ -15,7 +15,7 @@ def min_max(nums: list[float | int]) -> tuple[float | int, float | int]:
             min = nums[j]
     return (min, max)
 ```
-![Выявление минимума и максимума](./images/01.arrays.png)
+![Выявление минимума и максимума](/src/lab02/images/01.arrays.png)
 
 ## Задание 1(2)
 ```python
@@ -24,8 +24,7 @@ def unique_sorted(nums: list[float | int]) -> list[float | int]:
     nums2 = sorted(nums1)
     return nums2
 ```  
-![ Вернуть отсортированный список уникальных значений по возрастанию](/images/02.arrays.png)
-
+![ Вернуть отсортированный список уникальных значений по возрастанию](/src/lab02/images/02.arrays.png)
 ## Задание 1(3)
 ```python
 def flatten(mat: list[list | tuple]) -> list:
@@ -37,7 +36,7 @@ def flatten(mat: list[list | tuple]) -> list:
             result.append(j)
     return result
 ```
-![«Расплющить» кортежи в один список по строкам](/images/03.arrays.png)
+![«Расплющить» кортежи в один список по строкам](/src/lab02/images/03.arrays.png)
 
 ## Задание 2(1)
 ```python
@@ -58,7 +57,7 @@ def transpose(mat: list[list[float | int]]) -> list[list]:
         res.append(new_row)
     return res
 ```
-![Поменять строки и столбцы местами](/images/01.matrix.png)
+![Поменять строки и столбцы местами](/src/lab02/images/01.matrix.png)
 
 ## Задание 2(2)
 ```python
@@ -74,8 +73,7 @@ def row_sums(mat: list[list[float | int]]) -> list[float]:
         result.append(sum)
     return result
 ```
-![Вычисление суммы каждой строки матрицы](/src/lab02/images/02.arrays.png)
-
+![Вычисление суммы каждой строки матрицы](/src/lab02/images/02.matrix.png)
 ## Задание 2(3)
 ```python
 def col_sums(mat: list[list[float | int]]) -> list[float]:
@@ -91,7 +89,7 @@ def col_sums(mat: list[list[float | int]]) -> list[float]:
             sum_list[j] = sum_list[j]+row[j] 
     return sum_list
 ```
-![Вычисление суммы каждого столбца матрицы](/images/03.matrix.png)
+![Вычисление суммы каждого столбца матрицы](/src/lab02/images/03.matrix.png)
 
 ## Задание 3(1)
 ```python
@@ -113,5 +111,4 @@ def format_record(rec: tuple[str, str, float]) -> str:
     
     return f"{formatted_fio}, гр. {group}, GPA {formatted_gpa}"
 ```
-![Работа с "записями" как с кортежами](/images/01.tuples.png)
-лдшшшшошозшшlwamdvmkeaas,dmc
+![Работа с "записями" как с кортежами](/src/lab02/images/01.tuples.png)
