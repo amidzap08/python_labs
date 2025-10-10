@@ -74,7 +74,7 @@ def row_sums(mat: list[list[float | int]]) -> list[float]:
         result.append(sum)
     return result
 ```
-![Вычисление суммы каждой строки матрицы](/images/02.matrix.png)
+![Вычисление суммы каждой строки матрицы](/src/lab02/images/02.arrays.png)
 
 ## Задание 2(3)
 ```python
