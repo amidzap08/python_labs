@@ -94,21 +94,45 @@ def col_sums(mat: list[list[float | int]]) -> list[float]:
 ## Задание 3(1)
 ```python
 def format_record(rec: tuple[str, str, float]) -> str:
+
+    if not isinstance(rec, tuple):                    
+        raise TypeError
+    
+    if len(rec) != 3:
+        raise ValueError
+    
     fio, group, gpa = rec
 
-    parts = [part for part in fio.strip().split() if part]
-
-    formatted_parts = []
-    for part in parts:
-        formatted_parts.append(part[0].upper() + part[1:].lower())
-
-    initials = []
-    for part in formatted_parts[1:]:
-        if part:
-            initials.append(part[0].upper() + ".")
-    formatted_fio = formatted_parts[0] + " " + "".join(initials)
-    formatted_gpa = f"{gpa:.2f}"
+    if not isinstance(fio, str) or not isinstance(group, str):  
+        raise TypeError
     
-    return f"{formatted_fio}, гр. {group}, GPA {formatted_gpa}"
+    if not isinstance(gpa, float):
+        raise TypeError
+
+    if not fio:                                            
+        raise ValueError
+    if not group:
+        raise ValueError
+    
+    if not gpa:
+        raise ValueError
+    
+    parts = fio.strip().split()                      
+    if len(parts) < 2:
+        raise ValueError
+    surname = parts[0].title()                                     
+    initials = "".join(p[0].upper() + '.' for p in parts[1:])       
+
+    group = group.strip()
+
+    gpa = f"{float(gpa):.2f}"
+    return f"{surname} {initials}, гр. {group}, GPA {gpa}"
+
+print(format_record(("Иванов Иван Иванович", "BIVT-25", 4.6)))
+print(format_record(("Петров Пётр", "IKBO-12", 5.0)))
+print(format_record(("Петров Пётр Петрович", "IKBO-12", 5.0)))
+print(format_record(("  сидорова  анна   сергеевна ", "ABB-01")))
+
 ```
 ![Работа с "записями" как с кортежами](/src/lab02/images/01.tuples.png)
+
