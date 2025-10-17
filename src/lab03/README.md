@@ -20,7 +20,7 @@ def normalize(text: str, *, casefold: bool = True, yo2e: bool = True) -> str:
 
     return text 
 ```
-![Картинка 1](/01_lab03.png)
+![Картинка 1](./images/01_lab03.png)
 
 ## Задание tokenize
 ```python
@@ -40,7 +40,7 @@ def tokenize(text: str) -> list[str]:
     
     return tokens
 ```
-![Картинка 2](/02_lab03.png)
+![Картинка 2](./images/02_lab03.png)
 
 ## Задание count_freq+top_n
 ```python
@@ -61,7 +61,7 @@ def top_n(freq: dict[str, int], n: int = 5) -> list[tuple[str, int]]:
     items.sort(key=lambda x: x[1], reverse=True)
     return items
 ```
-![Картинка 3](/03_lab03.png)
+![Картинка 3](./images/03_lab03.png)
 
 ## Задание В
 ```python
@@ -80,4 +80,4 @@ print("Ton-5: ")
 for i in top:
     print(i[0]+ ':' +str(i[1]))
 ```
-![Картинка 4](/04_lab03.png)
+![Картинка 4](./images/04_lab03.png)
