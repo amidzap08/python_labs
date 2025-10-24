@@ -2,6 +2,8 @@
 
 ## Задание А(1)
 ``` python
+from pathlib import Path
+
 def read_text(path: str | Path, encoding: str = "utf-8") -> str:
     p = Path(path)
     try:
@@ -20,6 +22,9 @@ def read_text(path: str | Path, encoding: str = "utf-8") -> str:
 
 ## Задание А(2)
 ```python
+import csv
+from pathlib import Path
+
 def read_text(path: str | Path, encoding: str = "utf-8") -> str:
     try:
         p = Path(path)
@@ -67,6 +72,11 @@ write_csv([("word","count"),("test",3)], "data/check.csv")
 
 ## Задание В
 ```python
+import sys
+from pathlib import Path
+import csv
+import argparse
+
 def read_csv_report(csv_file: str) -> None:
     input_path = Path(csv_file)
     

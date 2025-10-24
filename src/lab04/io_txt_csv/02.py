@@ -15,6 +15,7 @@ def write_csv(rows: list[tuple | list], path: str | Path, header: tuple[str, ...
     """Запись данных в CSV файл"""
     file_path = Path(path)
     file_path.parent.mkdir(parents=True, exist_ok=True)
+    # создание родительской директории
     
     if rows:
         first_row_len = len(rows[0])
@@ -25,11 +26,9 @@ def write_csv(rows: list[tuple | list], path: str | Path, header: tuple[str, ...
     with open(file_path, 'w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
         
-        # Запись заголовка
         if header:
             writer.writerow(header) 
-        
-        # Запись данных
+
         if rows:
             writer.writerows(rows)
    
@@ -42,9 +41,7 @@ if __name__ == "__main__":
     strUTF = read_text("data/input.txt")
     print("input.txt (UTF):", strUTF)
 
-    # ИСПРАВЛЕНИЕ: печатаем результат функции, а не класс исключения
     not_found = read_text("data/wexj.txt")
-    print("Не найден:", not_found)  # Будет: "Ошибка: Файл data/wexj.txt не найден"
-     
+    print("Не найден:", not_found)
     strcp1251 = read_text("data/exg1251.txt", encoding='cp1251')
     print("CP1251:", strcp1251)  
