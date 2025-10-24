@@ -51,6 +51,9 @@ def write_csv(rows: list[tuple | list], path: str | Path, header: tuple[str, ...
 with open(file_path, 'w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
 ```
+## табличка csv
+![картинка 2](/src/lab04/images/00.04.png)
+
 
 ## Задание В
 ```python
@@ -88,7 +91,10 @@ def read_csv_report(csv_file: str) -> None:
 
 ## если наш файл пустой,то выводит:
 ![Картинка 4](/src/lab04/images/03(1).04.png)
+
+
 ![картианка 5](/src/lab04/images/02.04(1).png)
 
 ## Если файл не существует/не найден
+
 ![Картинка 5](/src/lab04/images/03(2).04.png)
