@@ -76,6 +76,7 @@ import sys
 from pathlib import Path
 import csv
 import argparse
+from text import normalize, tokenize
 
 def read_csv_report(csv_file: str) -> None:
     input_path = Path(csv_file)
