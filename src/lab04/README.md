@@ -51,9 +51,19 @@ def write_csv(rows: list[tuple | list], path: str | Path, header: tuple[str, ...
 with open(file_path, 'w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
 ```
+
+
+## Тест-кейс для README 
+```python
+from src.io_txt_csv import read_text, write_csv
+txt = read_text("data/input.txt")
+write_csv([("word","count"),("test",3)], "data/check.csv")
+```
 ## табличка csv
 ![картинка 2](/src/lab04/images/00.04.png)
 
+## пустой файл с заголовком("a","b") 
+![Картинка 3](/src/lab04/images/04.04.png)
 
 ## Задание В
 ```python
@@ -98,3 +108,5 @@ def read_csv_report(csv_file: str) -> None:
 ## Если файл не существует/не найден
 
 ![Картинка 5](/src/lab04/images/03(2).04.png)
+
+### Если файл большой читается построчно
