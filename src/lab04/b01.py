@@ -1,20 +1,23 @@
-import sys
 from pathlib import Path
 import csv
 import argparse
+from function import normalize, tokenize, count_freq
+import sys, os
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../lab03/lib'))
 
 def read_csv_report(csv_file: str) -> None:
+    """Читает и анализирует CSV отчет"""
     input_path = Path(csv_file)
     
     if not input_path.exists():
         raise FileNotFoundError(f"Ошибка: файл {csv_file} не существует")
 
-
     with open(input_path, 'r', encoding='utf-8') as file:
-        reader = csv.reader(file) # интерирует сsv файл по строкам
-        header = next(reader) # первая строка из файла- заголовок
+        reader = csv.reader(file)
+        header = next(reader)
         
-        word_counts = {} # пустой словарь
+        word_counts = {}
         total_words = 0
         
         for row in reader:
@@ -31,10 +34,43 @@ def read_csv_report(csv_file: str) -> None:
     print("Топ-5:")
     
     sorted_words = sorted(word_counts.items(), key=lambda x: (-x[1], x[0]))
-    # ключ для сортировки, х- пара(слово,количество),-х[1]-сортирует по кол-ву
-    # в убывающем порядке
-    for word, count in sorted_words:
-        print(f"{word}:{count}")
+    for i, (word, count) in enumerate(sorted_words[:5], 1):
+        print(f"{i}. {word}: {count}")
+
+def generate_csv_report(input_file: str, output_file: str) -> None:
+    """Генерирует CSV отчет из текстового файла"""
+    input_path = Path(input_file)
+    
+    if not input_path.exists():
+        raise FileNotFoundError(f"Ошибка: файл {input_file} не существует")
+    
+    # Читаем текстовый файл
+    with open(input_path, 'r', encoding='utf-8') as f:
+        text = f.read()
+    
+    if not text.strip():
+        print("Пустой файл — создаю CSV только с заголовком.")
+        # Создаем пустой CSV с заголовком
+        output_path = Path(output_file)
+        with open(output_path, 'w', newline='', encoding='utf-8') as f:
+            writer = csv.writer(f)
+            writer.writerow(['word', 'count'])
+        return
+
+    # Обрабатываем текст
+    norm_text = normalize(text)
+    tokens = tokenize(norm_text)
+    freqs = count_freq(tokens)
+    
+    # Сохраняем результат в CSV
+    output_path = Path(output_file)
+    with open(output_path, 'w', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+        writer.writerow(['word', 'count'])  # заголовок
+        for word, count in freqs.items():
+            writer.writerow([word, count])
+    
+    print(f"Отчет сохранен в: {output_file}")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Чтение отчета из CSV файла')
