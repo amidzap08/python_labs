@@ -37,16 +37,16 @@ def main():
         csv_to_xlsx('data/samples/cities.csv', 'data/out/cities.xlsx')
         print("   ✓ Успешно")
         
-        print("\n🎉 ВСЕ КОНВЕРТАЦИИ ЗАВЕРШЕНЫ!")
-        print("📁 Результаты сохранены в data/out/")
+        print("\n ВСЕ КОНВЕРТАЦИИ ЗАВЕРШЕНЫ!")
+        print(" Результаты сохранены в data/out/")
         
         # Показываем созданные файлы
-        print("\n📄 Созданные файлы:")
+        print("\n Созданные файлы:")
         for file in os.listdir('data/out'):
             print(f"   - {file}")
             
     except Exception as e:
-        print(f"❌ Ошибка: {e}")
+        print(f" Ошибка: {e}")
         import traceback
         traceback.print_exc()
 
