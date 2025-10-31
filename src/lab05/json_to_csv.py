@@ -20,37 +20,40 @@ def json_to_csv(json_path: str, csv_path: str) -> None:
                 raise ValueError(f"JSON файл пуст: {json_path}")
             
             data = json.loads(content)
+            #преобразет джисон строку в питон объект,список или словарь
             
     except UnicodeDecodeError:
         raise ValueError(f"Файл {json_path} имеет неверную кодировку (требуется UTF-8)")
-    except json.JSONDecodeError as e:
+    except json.JSONDecodeError as e: #сохраняет объект исключения в переменную е 
         raise ValueError(f"Невалидный JSON в файле {json_path}: {e}")
     
     # Проверка структуры данных
     if not isinstance(data, list):
         raise ValueError("JSON должен содержать список")
     
+    
     if not data:
         raise ValueError("JSON должен содержать непустой список")
     
-    for item in data:
+    for item in data: #проходимся по элементам списка 
         if not isinstance(item, dict):
             raise ValueError("Все элементы в JSON должны быть словарями")
     
     # Формирование и запись CSV
-    all_columns = []
+    all_columns = [] 
     for item in data:
-        for key in item.keys():
-            if key not in all_columns:
+        for key in item.keys(): #возвращает все ключи словаря
+            if key not in all_columns: #проверяет есть ли такой ключ в списке
                 all_columns.append(key)
     
     with open(csv_path, 'w', encoding="UTF-8", newline='') as csv_file:
-        writer = csv.DictWriter(csv_file, fieldnames=all_columns)
+        writer = csv.DictWriter(csv_file, fieldnames=all_columns) #создает writer для записи словарей в csv
+        #fieildnames=передает список заголовков столбцов
         writer.writeheader()
         for row in data:
             full_row = {}
             for column in all_columns:
-                full_row[column] = row.get(column, '')
+                full_row[column] = row.get(column, '') # получает значение из словаря или пустую строку если ключа нет
             writer.writerow(full_row)
 
 def csv_to_json(csv_path: str, json_path: str) -> None:
@@ -70,7 +73,7 @@ def csv_to_json(csv_path: str, json_path: str) -> None:
             if not content:
                 raise ValueError(f"CSV файл пуст: {csv_path}")
             
-            csv_file.seek(0)
+            csv_file.seek(0) #используется для перемещения указателя в начало 
             reader = csv.DictReader(csv_file)
             
             if not reader.fieldnames:
@@ -109,13 +112,14 @@ if __name__ == "__main__":
     for func, args, expected_error, description in test_cases:
         print(f" {description}")
         try:
-            func(*args)
+            func(*args) # вызов функции с распакованными аргументами 
+            #оператор распаковки списка или кортежа в отдельные аргументы
             if expected_error is None:
-                print("   ✓ Успешно")
+                print("Успешно")
             else:
-                print("   ✗ ОШИБКА: ожидалась ошибка")
+                print("ОШИБКА: ожидалась ошибка")
         except Exception as e:
             if expected_error and isinstance(e, expected_error):
-                print(f"   ✓ Корректная ошибка: {e}")
+                print(f"Корректная ошибка: {e}")
             else:
-                print(f"   ✗ Неожиданная ошибка: {e}")
+                print(f"Неожиданная ошибка: {e}")

@@ -72,40 +72,104 @@ write_csv([("word","count"),("test",3)], "data/check.csv")
 
 ## Задание В
 ```python
-import sys
 from pathlib import Path
 import csv
 import argparse
-from text import normalize, tokenize
+from function import normalize, tokenize, count_freq
+import sys, os
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../lab03/lib'))
 
 def read_csv_report(csv_file: str) -> None:
     input_path = Path(csv_file)
     
     if not input_path.exists():
         raise FileNotFoundError(f"Ошибка: файл {csv_file} не существует")
-    with open(input_path, 'r', encoding='utf-8') as file:
-        reader = csv.reader(file)
-        header = next(reader) 
-        
-        word_counts = {}
-        total_words = 0
-        
-        for row in reader:
-            if len(row) >= 2:
-                word = row[0]
-                count = int(row[1])
-                word_counts[word] = count
-                total_words += count
+    
+    if not csv_file.lower().endswith('.csv'):
+        raise ValueError(f"Ошибка: файл {csv_file} не является CSV файлом")
+
+    try:
+        with open(input_path, 'r', encoding='utf-8') as file:
+            content = file.read().strip()
+            if not content:
+                raise ValueError(f"Ошибка: CSV файл {csv_file} пуст")
+            
+            file.seek(0) 
+            reader = csv.reader(file)
+            
+            try:
+                header = next(reader)
+            except StopIteration:
+                raise ValueError(f"Ошибка: CSV файл {csv_file} не содержит данных")
+            
+            word_counts = {}
+            total_words = 0
+            
+            for row in reader:
+                if len(row) >= 2:
+                    word = row[0]
+                    count = int(row[1])
+                    word_counts[word] = count
+                    total_words += count
+
+    except UnicodeDecodeError:
+        raise ValueError(f"Ошибка: файл {csv_file} имеет неверную кодировку (требуется UTF-8)")
+    except csv.Error as e:
+        raise ValueError(f"Ошибка: невалидный CSV в файле {csv_file}: {e}")
+
+    if not word_counts:
+        raise ValueError(f"Ошибка: CSV файл {csv_file} не содержит данных о словах")
+
     unique_words = len(word_counts)
     
     print(f"Всего слов: {total_words}")
     print(f"Уникальных слов: {unique_words}")
     print("Топ-5:")
-   
-    sorted_words = sorted(word_counts.items(), key=lambda x: (-x[1], x[0]))
     
-    for word, count in sorted_words:
-        print(f"{word}:{count}")
+    sorted_words = sorted(word_counts.items(), key=lambda x: (-x[1], x[0]))
+
+def generate_csv_report(input_file: str, output_file: str) -> None:
+    input_path = Path(input_file)
+    
+    if not input_path.exists():
+        raise FileNotFoundError(f"Ошибка: файл {input_file} не существует")
+  
+    if not input_file.lower().endswith('.txt'):
+        raise ValueError(f"Ошибка: входной файл {input_file} не является TXT файлом")
+    
+    if not output_file.lower().endswith('.csv'):
+        raise ValueError(f"Ошибка: выходной файл {output_file} не является CSV файлом")
+
+    try:
+        with open(input_path, 'r', encoding='utf-8') as f:
+            content = f.read().strip()
+            
+            if not content:
+                print("Пустой файл — создаю CSV только с заголовком.")
+                output_path = Path(output_file)
+                with open(output_path, 'w', newline='', encoding='utf-8') as f:
+                    writer = csv.writer(f)
+                    writer.writerow(['word', 'count'])
+                return
+            text = content
+    except UnicodeDecodeError:
+        raise ValueError(f"Ошибка: файл {input_file} имеет неверную кодировку (требуется UTF-8)")
+
+    norm_text = normalize(text)
+    tokens = tokenize(norm_text)
+    freqs = count_freq(tokens)
+    output_path = Path(output_file)
+    
+    try:
+        with open(output_path, 'w', newline='', encoding='utf-8') as f:
+            writer = csv.writer(f)
+            writer.writerow(['word', 'count'])  #заголовок
+            for word, count in freqs.items():
+                writer.writerow([word, count])
+    except Exception as e:
+        raise ValueError(f"Ошибка записи в файл {output_file}: {e}")
+    print(f"Отчет сохранен в: {output_file}")
 ```
 ## Тест-кейс
 ![Картинка 3](/src/lab04/images/03.04.png)

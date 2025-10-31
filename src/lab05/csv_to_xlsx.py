@@ -34,7 +34,7 @@ def csv_to_xlsx(csv_path: str, xlsx_path: str) -> None:
                 raise ValueError(f"Файл {csv_path} пуст")
             
             csv_file.seek(0)  # Возвращаемся к началу файла
-            reader = csv.reader(csv_file)
+            reader = csv.reader(csv_file)# создается обект для чтения построчнл
             
             for row in reader:
                 data.append(row)
@@ -48,22 +48,22 @@ def csv_to_xlsx(csv_path: str, xlsx_path: str) -> None:
         raise ValueError(f"CSV файл {csv_path} не содержит данных")
     
     # Создаем новую книгу Excel
-    wb = Workbook()
-    ws = wb.active
-    ws.title = "Sheet1"
+    wb = Workbook() #создает новую книгу эксель
+    ws = wb.active #получает активный лист
+    ws.title = "Sheet1" #название листа
     
     # Записываем данные в лист
-    for row_idx, row_data in enumerate(data, 1):
-        for col_idx, cell_value in enumerate(row_data, 1):
-            ws.cell(row=row_idx, column=col_idx, value=cell_value)
+    for row_idx, row_data in enumerate(data, 1):#idx-номер строки,  enumerate- цикл по значениям строки с индексом 1
+        for col_idx, cell_value in enumerate(row_data, 1):#записывает значение в ячейку
+            ws.cell(row=row_idx, column=col_idx, value=cell_value) #ячейка в таблице
     
     # Настраиваем автоширину колонок (не менее 8 символов)
     for col_idx in range(1, len(data[0]) + 1):
-        column_letter = get_column_letter(col_idx)
-        max_length = 8  # минимальная ширина
+        column_letter = get_column_letter(col_idx) #преобразует номер в букву колонки
+        max_length = 8  # минимальная ширина строки
         
         for row_idx in range(1, len(data) + 1):
-            cell_value = ws.cell(row=row_idx, column=col_idx).value
+            cell_value = ws.cell(row=row_idx, column=col_idx).value #получает значение ячейки
             if cell_value:
                 max_length = max(max_length, len(str(cell_value)))
         
@@ -85,7 +85,7 @@ if __name__ == "__main__":
     ]
     
     for args, expected_error, description in test_cases:
-        csv_path, xlsx_path = args
+        csv_path, xlsx_path = args #распаковка аргумента
         print(f"{description}")
         print(f"{csv_path}")
         
@@ -93,7 +93,6 @@ if __name__ == "__main__":
             csv_to_xlsx(csv_path, xlsx_path)
             if expected_error is None:
                 print("   УСПЕШНО - файл создан")
-                # Проверяем что файл действительно создан
                 if os.path.exists(xlsx_path):
                     print("    XLSX файл существует на диске")
             else:
@@ -108,7 +107,7 @@ if __name__ == "__main__":
     
     # Дополнительная проверка созданных файлов
     success_files = []
-    for file in os.listdir('data'):
+    for file in os.listdir('data'): #получает список файлов в папке дата
         if file.endswith('.xlsx'):
             success_files.append(file)
     
