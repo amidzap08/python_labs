@@ -169,7 +169,7 @@ def csv_to_xlsx(csv_path: str, xlsx_path: str) -> None:
 
         
 ```
-![Картинка 2](./images/result01.05.png)
+![Картинка 2](./images/result01.05%20—%20копия.png)
 ![Картинка 3](./images/result02.05.png)
 ![Картинка 4](./images/result03.05.png)
 
