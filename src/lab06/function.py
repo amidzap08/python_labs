@@ -1,5 +1,7 @@
-import json
 import csv
+import json
+from openpyxl import Workbook
+from openpyxl.utils import get_column_letter
 import os
 
 
@@ -104,53 +106,87 @@ def csv_to_json(csv_path: str, json_path: str) -> None:
         json.dump(data, json_file, ensure_ascii=False, indent=2)
 
 
-if __name__ == "__main__":
-    test_cases = [
-        # (функция, аргументы, ожидаемая_ошибка, описание)
-        (json_to_csv, ("data/people.json", "data/people.csv"), None, "Нормальный JSON"),
-        (
-            json_to_csv,
-            ("data/peopleempty.json", "data/people2.csv"),
-            ValueError,
-            "Пустой JSON",
-        ),
-        (
-            json_to_csv,
-            ("data/peoplenotdict.json", "data/people2.csv"),
-            ValueError,
-            "JSON не словари",
-        ),
-        (
-            json_to_csv,
-            ("data/peoplenotexist.json", "data/people2.csv"),
-            FileNotFoundError,
-            "Файл не существует",
-        ),
-        (
-            json_to_csv,
-            ("data/people1251.json", "data/people2.csv"),
-            ValueError,
-            "Не UTF-8 кодировка",
-        ),
-        (
-            json_to_csv,
-            ("data/people.txt", "data/people2.csv"),
-            ValueError,
-            "Не JSON расширение",
-        ),
-    ]
+def csv_to_xlsx(csv_path: str, xlsx_path: str) -> None:
+    """
+    Конвертирует CSV в XLSX.
 
-    for func, args, expected_error, description in test_cases:
-        print(f" {description}")
-        try:
-            func(*args)  # вызов функции с распакованными аргументами
-            # оператор распаковки списка или кортежа в отдельные аргументы
-            if expected_error is None:
-                print("Успешно")
-            else:
-                print("ОШИБКА: ожидалась ошибка")
-        except Exception as e:
-            if expected_error and isinstance(e, expected_error):
-                print(f"Корректная ошибка: {e}")
-            else:
-                print(f"Неожиданная ошибка: {e}")
+    Args:
+        csv_path: Путь к исходному CSV файлу
+        xlsx_path: Путь для сохранения XLSX файла
+
+    Raises:
+        FileNotFoundError: Если файл не существует
+        ValueError: Если файл не CSV, пустой, невалидный CSV или не UTF-8
+    """
+    # Проверка существования файла
+    if not os.path.exists(csv_path):
+        raise FileNotFoundError(f"Файл {csv_path} не найден")
+
+    # Проверка расширения файла
+    if not csv_path.lower().endswith(".csv"):
+        raise ValueError(f"Файл {csv_path} не является CSV файлом")
+
+    data = []
+
+    try:
+        with open(csv_path, "r", encoding="utf-8") as csv_file:
+            # Проверка что файл не пустой
+            content = csv_file.read().strip()
+            if not content:
+                raise ValueError(f"Файл {csv_path} пуст")
+
+            csv_file.seek(0)  # Возвращаемся к началу файла
+            reader = csv.reader(csv_file)  # создается обект для чтения построчнл
+
+            for row in reader:
+                data.append(row)
+
+    except UnicodeDecodeError:
+        raise ValueError(f"Файл {csv_path} имеет неверную кодировку (требуется UTF-8)")
+    except csv.Error as e:
+        raise ValueError(f"Невалидный CSV в файле {csv_path}: {e}")
+
+    if not data:
+        raise ValueError(f"CSV файл {csv_path} не содержит данных")
+
+    # Создаем новую книгу Excel
+    wb = Workbook()  # создает новую книгу эксель
+    ws = wb.active  # получает активный лист
+    ws.title = "Sheet1"  # название листа
+
+    # Записываем данные в лист
+    for row_idx, row_data in enumerate(
+        data, 1
+    ):  # idx-номер строки,  enumerate- цикл по значениям строки с индексом 1
+        for col_idx, cell_value in enumerate(
+            row_data, 1
+        ):  # записывает значение в ячейку
+            ws.cell(row=row_idx, column=col_idx, value=cell_value)  # ячейка в таблице
+
+    # Настраиваем автоширину колонок (не менее 8 символов)
+    for col_idx in range(1, len(data[0]) + 1):
+        column_letter = get_column_letter(col_idx)  # преобразует номер в букву колонки
+        max_length = 8  # минимальная ширина строки
+
+        for row_idx in range(1, len(data) + 1):
+            cell_value = ws.cell(
+                row=row_idx, column=col_idx
+            ).value  # получает значение ячейки
+            if cell_value:
+                max_length = max(max_length, len(str(cell_value)))
+
+        ws.column_dimensions[column_letter].width = (
+            max_length + 2
+        )  # добавляем небольшой отступ
+
+    # Сохраняем файл
+    wb.save(xlsx_path)
+
+
+def top_n(freq: dict[str, int], n: int = 5) -> list[tuple[str, int]]:
+    items = []
+    for word, count in freq.items():
+        items.append([word, count])
+    items.sort()
+    items.sort(key=lambda x: x[1], reverse=True)
+    return items
