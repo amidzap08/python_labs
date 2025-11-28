@@ -40,5 +40,4 @@ addopts = "--strict-markers --maxfail=1"
 
 ![Картинка 5](/src/lab07/images/prov2.png)
 
-![](/tests/test_csv_to_json.py)
-![](/tests/test_text.py)
+[ТЕСТЫ](https://github.com/amidzap08/python_labs/blob/main/tests/test_csv_to_json.py)
