@@ -182,15 +182,16 @@ def csv_to_xlsx(csv_path: str, xlsx_path: str) -> None:
     # Сохраняем файл
     wb.save(xlsx_path)
 
+
 def top_n(args):
     """
     Обрабатывает команду stats - статистика по словам в файле
     """
     try:
         # Читаем файл
-        with open(args.input, 'r', encoding='utf-8') as file:
+        with open(args.input, "r", encoding="utf-8") as file:
             text = file.read()
-        
+
         # Разбиваем на слова и подсчитываем частоту
         words = text.lower().split()
         freq = {}
@@ -199,24 +200,24 @@ def top_n(args):
             word = word.strip('.,!?;:"()[]')
             if word:  # если слово не пустое
                 freq[word] = freq.get(word, 0) + 1
-        
+
         # Сортируем по частоте
         items = []
         for word, count in freq.items():
             items.append([word, count])
         items.sort(key=lambda x: x[1], reverse=True)
-        
+
         # Выводим топ-N слов
-        n = args.top if hasattr(args, 'top') else 10
+        n = args.top if hasattr(args, "top") else 10
         top_words = items[:n]
-        
+
         print(f"Топ-{n} самых частых слов:")
         print("-" * 30)
         for i, (word, count) in enumerate(top_words, 1):
             print(f"{i:2}. {word:15} - {count:3} раз")
-            
+
         return top_words
-        
+
     except Exception as e:
         print(f"Ошибка при обработке файла: {e}")
         return []

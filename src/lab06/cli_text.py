@@ -52,7 +52,7 @@ def main():
     if not args.command:
         parser.print_help()
         return
-    
+
     try:
         if args.command == "cat":
             cat_command(args)
@@ -87,9 +87,9 @@ def cat_command(args):
 def stats_command(args):
     """Обработчик команды stats"""
     try:
-        with open(args.input, 'r', encoding='utf-8') as file:
+        with open(args.input, "r", encoding="utf-8") as file:
             text = file.read()
-        
+
         # Подсчет частоты слов
         words = text.lower().split()
         freq = {}
@@ -97,16 +97,16 @@ def stats_command(args):
             word = word.strip('.,!?;:"()[]')
             if word:
                 freq[word] = freq.get(word, 0) + 1
-        
+
         # Используем функцию top_n
         n = args.top
         top_words = top_n(freq, n)
-        
+
         print(f"Топ-{n} самых частых слов:")
         print("-" * 30)
         for i, (word, count) in enumerate(top_words, 1):
             print(f"{i:2}. {word:15} - {count:3} раз")
-            
+
     except Exception as e:
         print(f"Ошибка при обработке файла {args.input}: {e}")
 
