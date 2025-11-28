@@ -1,0 +1,5 @@
+Hello world
+This is a test file
+For testing CLI commands
+Python is great
+Hello again

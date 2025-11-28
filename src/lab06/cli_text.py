@@ -1,8 +1,8 @@
 import sys
 import argparse
-from function import json_to_csv, csv_to_json
-from function import csv_to_xlsx
-from function import top_n
+from lab06.function import json_to_csv, csv_to_json
+from lab06.function import csv_to_xlsx
+from lab06.function import top_n
 
 
 def setup_parser():
@@ -12,6 +12,7 @@ def setup_parser():
     )
     subparsers = parser.add_subparsers(dest="command", help="Доступные команды")
 
+    # Команда cat
     cat_parser = subparsers.add_parser(
         "cat", help="Вывод содержимого файла с номерами строк"
     )
@@ -19,26 +20,29 @@ def setup_parser():
     cat_parser.add_argument(
         "-n", "--number", action="store_true", help="Показать номера строк"
     )
+
+    # Команда stats
     stats_parser = subparsers.add_parser("stats", help="Статистика по словам в файле")
     stats_parser.add_argument("--input", required=True, help="Входной файл")
     stats_parser.add_argument(
         "--top", type=int, default=10, help="Количество топ-слов для вывода"
     )
 
+    # Команда json2csv
     json2csv_parser = subparsers.add_parser("json2csv", help="Конвертация JSON в CSV")
     json2csv_parser.add_argument("--input", required=True, help="Входной JSON файл")
-    json2csv_parser.add_argument("--output", help="Выходной CSV файл (опционально)")
+    json2csv_parser.add_argument("--output", required=True, help="Выходной CSV файл")
 
-    json2csv_parser.add_argument("--in", dest="input", required=True)
-    json2csv_parser.add_argument("--out", dest="output", required=True)
+    # Команда csv2json
+    csv2json_parser = subparsers.add_parser("csv2json", help="Конвертация CSV в JSON")
+    csv2json_parser.add_argument("--input", required=True, help="Входной CSV файл")
+    csv2json_parser.add_argument("--output", required=True, help="Выходной JSON файл")
 
-    csv2json_parser = subparsers.add_parser("csv2json")
-    csv2json_parser.add_argument("--in", dest="input", required=True)
-    csv2json_parser.add_argument("--out", dest="output", required=True)
+    # Команда csv2xlsx
+    csv2xlsx_parser = subparsers.add_parser("csv2xlsx", help="Конвертация CSV в XLSX")
+    csv2xlsx_parser.add_argument("--input", required=True, help="Входной CSV файл")
+    csv2xlsx_parser.add_argument("--output", required=True, help="Выходной XLSX файл")
 
-    csv2xlsx_parser = subparsers.add_parser("csv2xlsx")
-    csv2xlsx_parser.add_argument("--in", dest="input", required=True)
-    csv2xlsx_parser.add_argument("--out", dest="output", required=True)
     return parser
 
 
@@ -48,22 +52,27 @@ def main():
     if not args.command:
         parser.print_help()
         return
-    commands = {
-        "cat": cat_command,
-        "stats": top_n,
-        "json2csv": json_to_csv,
-        "csv2json": csv_to_json,
-        "csv2xlsx": csv_to_xlsx,
-    }
-    if args.command in commands:
-        commands[args.command](args)
-    else:
-        print(f"Неизвестная команда: {args.command}")
+    
+    try:
+        if args.command == "cat":
+            cat_command(args)
+        elif args.command == "stats":
+            stats_command(args)
+        elif args.command == "json2csv":
+            json_to_csv(args.input, args.output)
+        elif args.command == "csv2json":
+            csv_to_json(args.input, args.output)
+        elif args.command == "csv2xlsx":
+            csv_to_xlsx(args.input, args.output)
+        else:
+            print(f"Неизвестная команда: {args.command}")
+            sys.exit(1)
+    except Exception as e:
+        print(f"Ошибка при выполнении команды: {e}")
         sys.exit(1)
 
 
 def cat_command(args):
-
     try:
         with open(args.input, "r", encoding="utf-8") as file:
             for i, line in enumerate(file, 1):
@@ -71,9 +80,37 @@ def cat_command(args):
                     print(f"{i}. {line.rstrip()}")
                 else:
                     print(line.rstrip())
-    except:
-        print(f"Не удалось прочитать файл {args.input}")
+    except Exception as e:
+        print(f"Не удалось прочитать файл {args.input}: {e}")
+
+
+def stats_command(args):
+    """Обработчик команды stats"""
+    try:
+        with open(args.input, 'r', encoding='utf-8') as file:
+            text = file.read()
+        
+        # Подсчет частоты слов
+        words = text.lower().split()
+        freq = {}
+        for word in words:
+            word = word.strip('.,!?;:"()[]')
+            if word:
+                freq[word] = freq.get(word, 0) + 1
+        
+        # Используем функцию top_n
+        n = args.top
+        top_words = top_n(freq, n)
+        
+        print(f"Топ-{n} самых частых слов:")
+        print("-" * 30)
+        for i, (word, count) in enumerate(top_words, 1):
+            print(f"{i:2}. {word:15} - {count:3} раз")
+            
+    except Exception as e:
+        print(f"Ошибка при обработке файла {args.input}: {e}")
 
 
 if __name__ == "__main__":
     main()
+##python src\lab06\cli_text.py json2csv --input data\data.json --output data\output.csv
