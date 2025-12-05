@@ -12,3 +12,5 @@
 [Лаба 6](https://github.com/amidzap08/python_labs/tree/main/src/lab06)<--
 
 [Лаба 7](https://github.com/amidzap08/python_labs/tree/main/src/lab07)<--
+
+[Лаба 8](https://github.com/amidzap08/python_labs/tree/main/src/lab08)<--
