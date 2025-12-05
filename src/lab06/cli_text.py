@@ -4,6 +4,9 @@ from lab06.function import json_to_csv, csv_to_json
 from lab06.function import csv_to_xlsx
 from lab06.function import top_n
 
+##CLI‑программы позволяют вызывать функции программы через команды и флаги
+##Модуль argparse — стандартный инструмент Python для парсинга аргументов командной строки.
+
 
 def setup_parser():
     parser = argparse.ArgumentParser(
@@ -113,4 +116,4 @@ def stats_command(args):
 
 if __name__ == "__main__":
     main()
-##python src\lab06\cli_text.py json2csv --input data\data.json --output data\output.csv
+
