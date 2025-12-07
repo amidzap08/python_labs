@@ -190,16 +190,6 @@ class Group:
         return True
     
     def update(self, fio: str, **fields) -> bool:
-        """
-        Обновление полей существующего студента
-        
-        Args:
-            fio: ФИО студента для обновления
-            **fields: поля для обновления (group, gpa, birthdate)
-            
-        Returns:
-            True если обновление успешно, False в противном случае
-        """
         if not fields:
             print("Не указаны поля для обновления")
             return False
@@ -225,12 +215,6 @@ class Group:
     
     # ★ Дополнительное задание со звездочкой
     def stats(self) -> Dict[str, Any]:
-        """
-        Сбор статистики по группе
-        
-        Returns:
-            Словарь со статистикой
-        """
         students = self.list()
         
         if not students:
@@ -289,7 +273,7 @@ def test_group_operations():
     
     for student in students_to_add:
         if group.add(student):
-            print(f"  ✓ Добавлен: {student.fio}")
+            print(f"Добавлен: {student.fio}")
     
     # 2. Вывод списка
     print("\n2. Список всех студентов:")

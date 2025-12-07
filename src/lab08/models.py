@@ -1,19 +1,23 @@
-from dataclasses import dataclass
-from datetime import datetime, date
+from datetime import datetime, date #для работы с датами
+from dataclasses import dataclass #для регулярных выражений (валидация ФИО)
 import re
+#__init__ вызывается при создании объекта
+#self — ссылка на текущий экземпляр
+#инкапсуляция → контроль данных и валидация
+#4 столпа ООП:Абстракция, Инкапсуляция,Наследование, Полиморфизм
+
 
 
 @dataclass
+#@dataclass - это декоратор из модуля dataclasses в Python , который автоматически генерирует стандартные методы для классов, хранящих данные.
 class Student:
-    """Класс Student для представления студента"""
     fio: str
     birthdate: str
     group: str
     gpa: float
 
-    def __post_init__(self):
-        """Валидация данных после инициализации"""
-        # Валидация даты
+    def __post_init__(self):#выполняет проверку корректности данных после создания объекта.
+        #валидация даты
         try:
             datetime.strptime(self.birthdate, "%Y-%m-%d")
         except ValueError:
@@ -29,7 +33,7 @@ class Student:
 
     def age(self) -> int:
         """Вычисляет возраст студента в полных годах"""
-        birth_date = datetime.strptime(self.birthdate, "%Y-%m-%d").date()
+        birth_date = datetime.strptime(self.birthdate, "%Y-%m-%d").date() #из строки в тайм
         today = date.today()
         
         age = today.year - birth_date.year
@@ -49,7 +53,7 @@ class Student:
             "gpa": self.gpa
         }
 
-    @classmethod
+    @classmethod #Декоратор, указывающий, что это классовый метод. Он вызывается не от конкретного объекта 
     def from_dict(cls, data: dict):
         """Десериализует словарь в объект Student с валидацией"""
         # Дополнительная проверка типов перед созданием объекта

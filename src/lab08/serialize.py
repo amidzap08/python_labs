@@ -7,26 +7,18 @@ def students_to_json(students: List[Student], path: str):
     data = [student.to_dict() for student in students]
     
     with open(path, 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
-    
+        json.dump(data, f, ensure_ascii=False, indent=2) #Функция json.dump преобразует объект Python в JSON и записывает её в открытый файл f
+    #indent=2 — форматирует JSON с отступами в 2 пробела для читаемости
     print(f"Данные успешно сохранены в {path}")
 
 
 def students_from_json(path: str) -> List[Student]:
-    """
-    Читает JSON файл и создает список объектов Student
-    
-    Args:
-        path: путь к JSON файлу
-        
-    Returns:
-        List[Student]: список объектов Student
-    """
+
     try:
         with open(path, 'r', encoding='utf-8') as f:
             data = json.load(f)
         
-        # Проверка что data является списком
+        #проверка что data является списком
         if not isinstance(data, list):
             raise TypeError("JSON должен содержать список объектов")
         
@@ -40,10 +32,13 @@ def students_from_json(path: str) -> List[Student]:
                 # Проверка обязательных полей и их типов
                 if not isinstance(item.get("fio"), str):
                     raise TypeError("Поле 'fio' должно быть строкой")
+                
                 if not isinstance(item.get("birthdate"), str):
                     raise TypeError("Поле 'birthdate' должно быть строкой")
+                
                 if not isinstance(item.get("group"), str):
                     raise TypeError("Поле 'group' должно быть строкой")
+                
                 if not isinstance(item.get("gpa"), (float, int)):
                     raise TypeError("Поле 'gpa' должно быть числом (int или float)")
                 
