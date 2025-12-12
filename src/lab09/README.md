@@ -1,3 +1,7 @@
+## Лабораторная работа 9 
+### Задание А
+
+```python
 import csv
 from pathlib import Path
 from typing import List, Dict
@@ -20,31 +24,30 @@ class Student:
     
     @classmethod
     def from_dict(cls, data: Dict) -> 'Student':
-        return cls(**data) #**data - распаковка словаря в аргументы: Student(fio=..., birthdate=...)
+        return cls(**data)
     
-    def __repr__(self): #метод для строкового представления объекта.Вызывается при print(student) или в отладке.
+    def __repr__(self):
         return f"Student(fio='{self.fio}', group='{self.group}', gpa={self.gpa})"
     
     def as_dict(self) -> Dict:
-        #возвращает данные студента в виде словаря
+        """Возвращает данные студента в виде словаря"""
         return {
             "ФИО": self.fio,
             "Дата рождения": self.birthdate,
             "Группа": self.group,
             "Средний балл": self.gpa
         }
-#to_dict() - для внутреннего использования (запись в CSV с английскими ключами)
-#as_dict() - для внешнего представления (с русскими заголовками для пользователя)
+
 
 class Group:
-    #класс для управления хранилищем студентов в CSV-файле
+    """Класс для управления хранилищем студентов в CSV-файле"""
     
     HEADER = ["fio", "birthdate", "group", "gpa"]
     
     def __init__(self, storage_path: str = "data/lab09/students.csv"):
         self.path = Path(storage_path)
         
-        #создаем файл только если он не существует
+        # Создаем файл только если он не существует
         if not self.path.exists():
             self.path.parent.mkdir(parents=True, exist_ok=True)
             with open(self.path, 'w', newline='', encoding='utf-8') as file:
@@ -52,7 +55,7 @@ class Group:
                 writer.writeheader()
     
     def _read_all_raw(self) -> List[Dict[str, str]]:
-        #чтение всех записей из CSV в виде словарей
+        """Чтение всех записей из CSV в виде словарей"""
         if not self.path.exists() or self.path.stat().st_size == 0:
             return []
         
@@ -288,40 +291,20 @@ def print_dict(data: Dict, title: str = ""):
         print(f"  {key}: {value}")
 
 
-# Пример использования
-if __name__ == "__main__":
-    # Создаем начальный файл с данными
-    create_initial_file()
-    
-    # Создаем объект Group
-    people = Group("data/lab09/students.csv")
-    
-    print("1. Все студенты:")
-    print(people.list())
-    
-    print("\n2. Добавление студента:")
-    people.add(Student("Кудрявцева Анастасия Олеговна", "2007-06-18", "БИВТ-25-7", 4.6))
-    
-    print("\n3. Поиск по 'Смир':")
-    found = people.find('Смир')
-    if found:
-        print(f"  Найдено {len(found)} студент(ов):")
-        print(people.find('Смир'))
-    else:
-        print("  Не найдено")
-    
-    print("\n4. Удаление студента:")
-    if people.remove('Кудрявцева Анастасия Олеговна'):
-        removed_data = people.get_last_removed_student()
-        print(" Студент удален")
-        print_dict(removed_data, "  Данные удаленного студента")
-    
-    print("\n5. Добавление и обновление:")
-    people.add(Student("Дзяпшба Амина Астамуровна", "2008-08-15", "БИВТ-25-7", 5.0))
-    if people.update("Дзяпшба Амина Астамуровна", birthdate='2008-08-14', gpa=4.6):
-        updated_data = people.get_last_updated_student()
-        print(" Данные обновлены")
-        print_dict(updated_data, "  Обновленные данные студента")
+```
+### print(people.list())
+![Картинка 1](/src/lab09/images/list.png)
 
-    
-    print(f"\nВсего студентов: {people.count()}")
+### people.add(Student("Дзяпшба Амина Астамуровна", "2008-08-15", "БИВТ-25-7", 5.0))
+###  people.update("Дзяпшба Амина Астамуровна", birthdate='2008-08-14', gpa=4.6)
+![Картинка 2](/src/lab09/images/dannie.png)
+
+### students.csv и добавленный people
+![Картинка 3](/src/lab09/images/добавила.png)
+
+### people.remove('Кудрявцева Анастасия Олеговна'):
+![Картинка 4](/src/lab09/images/remove.png)
+
+### print(people.find('Смир'))
+![Картинка 5](/src/lab09/images/find.png)
+
