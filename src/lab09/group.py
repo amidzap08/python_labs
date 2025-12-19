@@ -1,3 +1,16 @@
+#Класс Group, реализующий CRUD-операции над студентами:
+
+#инициализацию с путём к CSV-файлу (__init__)
+#чтение всех записей из CSV
+#методы:
+#add(student: Student) — добавление студента
+#list() -> list[Student] — получить всех студентов
+#find(substr: str) — поиск по подстроке в ФИО
+#remove(fio: str) — удаление по ФИО
+#update(fio: str, **fields) — обновление полей существующей записи
+
+#CRUD — акроним, описывающий четыре базовые операции, которые должны поддерживаться в системах хранения данных:
+#Create (Создание),Read (Чтение) ,Update (Обновление), Delete (Удаление)
 import csv
 from pathlib import Path
 from typing import List, Dict
@@ -15,7 +28,7 @@ class Student:
             "fio": self.fio,
             "birthdate": self.birthdate,
             "group": self.group,
-            "gpa": str(self.gpa)
+            "gpa": str(self.gpa)#преобразование числа обратно в строку
         }
     
     @classmethod
@@ -50,12 +63,16 @@ class Group:
             with open(self.path, 'w', newline='', encoding='utf-8') as file:
                 writer = csv.DictWriter(file, fieldnames=self.HEADER)
                 writer.writeheader()
-    
+#self.path.parent - получение родительской директории файла
+#.mkdir() - создание директории
+#parents=True - создавать все родительские директории, если их нет
+#exist_ok=True - не вызывать ошибку, если директория уже существует
     def _read_all_raw(self) -> List[Dict[str, str]]:
         #чтение всех записей из CSV в виде словарей
         if not self.path.exists() or self.path.stat().st_size == 0:
             return []
-        
+        #self.path.stat().st_size - получение размера файла в байтах
+
         with open(self.path, 'r', encoding='utf-8') as file:
             reader = csv.DictReader(file)
             rows = []
@@ -65,14 +82,14 @@ class Group:
             return rows
     
     def _write_all(self, data: List[Dict[str, str]]) -> None:
-        """Запись всех записей в CSV"""
+        #Запись всех записей в CSV
         with open(self.path, 'w', newline='', encoding='utf-8') as file:
             writer = csv.DictWriter(file, fieldnames=self.HEADER)
             writer.writeheader()
             writer.writerows(data)
     
     def list(self) -> List[Student]:
-        """Получение всех студентов в виде объектов Student"""
+        #Получение всех студентов в виде объектов Student
         raw_data = self._read_all_raw()
         students = []
         
@@ -82,10 +99,10 @@ class Group:
                     'fio': row.get('fio', '').strip(),
                     'birthdate': row.get('birthdate', '').strip(),
                     'group': row.get('group', '').strip(),
-                    'gpa': float(row.get('gpa', 0))
+                    'gpa': float(row.get('gpa', 0)) #float(row.get('gpa', 0)) - преобразование строки GPA в число
                 }
-                students.append(Student(**student_data))
-            except (ValueError, KeyError):
+                students.append(Student(**student_data)) #создание объекта Student из словаря
+            except (ValueError, KeyError): #ошибка доступа к несуществующему ключу словаря
                 continue
         
         return students
