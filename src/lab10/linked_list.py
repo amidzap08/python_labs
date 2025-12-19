@@ -10,6 +10,7 @@ class Node:
 
     def __repr__(self) -> str:
         return f"Node({self.value!r})"
+#Строковое представление узла для отладки 
 
 
 class SinglyLinkedList:
@@ -29,6 +30,7 @@ class SinglyLinkedList:
 
     __slots__ = ("head", "tail", "_size")
 
+#Если передан iterable (список, кортеж и т.д.), добавляем все элементы
     def __init__(self, iterable=None) -> None:
         self.head: Optional[Node] = None
         self.tail: Optional[Node] = None
@@ -37,8 +39,8 @@ class SinglyLinkedList:
             for v in iterable:
                 self.append(v)
 
+#добавление в конец
     def append(self, value: Any) -> None:
-        """Добавить в конец — O(1)."""
         node = Node(value)
         if not self.head:
             self.head = node
@@ -49,14 +51,15 @@ class SinglyLinkedList:
             self.tail = node
         self._size += 1
 
+#добавление в начало
     def prepend(self, value: Any) -> None:
-        """Добавить в начало — O(1)."""
         node = Node(value, next=self.head)
         self.head = node
         if self._size == 0:
             self.tail = node
         self._size += 1
 
+# вставка по индексу
     def insert(self, idx: int, value: Any) -> None:
         """Вставить по индексу. Допускаются idx==0 и idx==len."""
         if idx < 0 or idx > self._size:
@@ -69,18 +72,18 @@ class SinglyLinkedList:
             return
 
         prev = self.head
-        for _ in range(idx - 1):
+        for _ in range(idx - 1):  # Идем к узлу перед позицией вставки
             assert prev is not None
-            prev = prev.next
+            prev = prev.next # Новый узел ссылается на следующий
         assert prev is not None
         node = Node(value, next=prev.next)
-        prev.next = node
+        prev.next = node # Предыдущий ссылается на новый
         self._size += 1
 
     def remove(self, value: Any) -> None:
         """Удалить первое вхождение value. Если не найдено — ValueError."""
         prev: Optional[Node] = None
-        cur = self.head
+        cur = self.head 
         idx = 0
         while cur:
             if cur.value == value:
@@ -116,7 +119,7 @@ class SinglyLinkedList:
     def __iter__(self) -> Iterator[Any]:
         cur = self.head
         while cur:
-            yield cur.value
+            yield cur.value 
             cur = cur.next
 
     def __len__(self) -> int:
