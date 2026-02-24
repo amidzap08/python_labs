@@ -40,21 +40,21 @@ class Athlete: #1 Один пользовательский класс
             raise ValueError("Имя не может быть длиннее 50 символов")
     
     def _validate_age(self, age: int) -> None:
-        """Проверка корректности возраста"""
+        #Проверка корректности возраста
         if not isinstance(age, int):
             raise ValueError("Возраст должен быть целым числом")
         if age < Athlete.min_age or age > Athlete.max_age:
             raise ValueError(f"Возраст должен быть от {Athlete.min_age} до {Athlete.max_age} лет")
     
     def _validate_sport_type(self, sport_type: str) -> None:
-        """Проверка корректности вида спорта"""
+        #Проверка корректности вида спорта
         if not isinstance(sport_type, str):
             raise ValueError("Вид спорта должен быть строкой")
         if sport_type not in Athlete.sport_type_list:
             raise ValueError(f"Вид спорта должен быть одним из: {', '.join(Athlete.sport_type_list)}")
     
     def _validate_weight(self, weight: float) -> None:
-        """Проверка корректности веса"""
+        #Проверка корректности веса
         if not isinstance(weight, (int, float)):
             raise ValueError("Вес должен быть числом")
         if weight <= 0:
@@ -63,7 +63,7 @@ class Athlete: #1 Один пользовательский класс
             raise ValueError("Вес не может превышать 200 кг")
     
     def _validate_personal_record(self, record: float) -> None:
-        """Проверка корректности личного рекорда"""
+        #Проверка корректности личного рекорда
         if not isinstance(record, (int, float)):
             raise ValueError("Личный рекорд должен быть числом")
         if record < 0:
@@ -72,62 +72,62 @@ class Athlete: #1 Один пользовательский класс
     # Свойства (геттеры и сеттеры)
     @property #4 Свойства для чтения Геттеры для доступа к данным
     def name(self) -> str:
-        """Геттер для имени"""
+        #Геттер для имени
         return self._name
     
     @name.setter
     def name(self, value: str) -> None:
-        """Сеттер для имени с валидацией"""
+        #Сеттер для имени с валидацией
         self._validate_name(value)
         self._name = value.strip()
     
     @property
     def age(self) -> int:
-        """Геттер для возраста"""
+        #Геттер для возраста
         return self._age
     
     @age.setter
     def age(self, value: int) -> None:
-        """Сеттер для возраста с валидацией"""
+        #Сеттер для возраста с валидацией
         self._validate_age(value)
         self._age = value
     
     @property
     def sport_type(self) -> str:
-        """Геттер для вида спорта"""
+        #Геттер для вида спорт
         return self._sport_type
     
     @sport_type.setter
     def sport_type(self, value: str) -> None:
-        """Сеттер для вида спорта с валидацией"""
+        #Сеттер для вида спорта с валидацией
         self._validate_sport_type(value)
         self._sport_type = value
     
     @property
     def weight(self) -> float:
-        """Геттер для веса"""
+        #Геттер для веса
         return self._weight
     
     @weight.setter
     def weight(self, value: float) -> None: #4 cеттеры с валидацией 
-        """Сеттер для веса с валидацией"""
+        #Сеттер для веса с валидацией
         self._validate_weight(value)
         self._weight = float(value)
     
     @property
     def personal_record(self) -> float:
-        """Геттер для личного рекорда"""
+        #Геттер для личного рекорда
         return self._personal_record
     
     @personal_record.setter
     def personal_record(self, value: float) -> None:
-        """Сеттер для личного рекорда с валидацией"""
+        #Сеттер для личного рекорда с валидацией
         self._validate_personal_record(value)
         self._personal_record = float(value)
     
     @property
     def is_active(self) -> bool:
-        """Геттер для статуса активности"""
+        #Геттер для статуса активности
         return self._is_active
     
     # Бизнес-методы
@@ -171,13 +171,13 @@ class Athlete: #1 Один пользовательский класс
                 f"Сожжено примерно {total_calories:.0f} ккал.")
     
     def deactivate(self) -> None:
-        """Деактивация спортсмена"""
+        #Деактивация спортсмена
         if not self._is_active:
             raise ValueError("Спортсмен уже неактивен")
         self._is_active = False
     
     def activate(self) -> None:
-        """Активация спортсмена"""
+        #Активация спортсмена
         if self._is_active:
             raise ValueError("Спортсмен уже активен")
         self._is_active = True
@@ -197,9 +197,9 @@ class Athlete: #1 Один пользовательский класс
     
     # Магические методы
     def __str__(self) -> str: #5/ cтроковое представление
-        """
-        Строковое представление для пользователей
-        """
+
+        #Строковое представление для пользователей
+
         status = "активен" if self._is_active else "неактивен"
         return (f"Спортсмен: {self._name} | Возраст: {self._age} | "
                 f"Вид спорта: {self._sport_type} | Вес: {self._weight:.1f} кг | "
@@ -223,18 +223,18 @@ from two_sem.lab01.model import Athlete
 
 
 def print_header(text):
-    """Вывод заголовка"""
+    #вывод заголовка
     print(f"\n{text}")
 
 
 
 def print_result(text):
-    """Вывод результата с отступом"""
+    #Вывод результата с отступом
     print(f"  {text}")
 
 
 def main():
-    """Основная функция демонстрации"""
+    #Основная функция демонстрации
     
     print("\n Демонстрация класса ATHLETE")
    
