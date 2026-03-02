@@ -1,73 +1,55 @@
 from datetime import datetime
+from two_sem.lab01.validate import AthleteValidator  # Импортируем валидатор
 
 
-class Athlete: #1 Один пользовательский класс 
-
-    # Атрибуты класса
-    sport_type_list = ["Футбол", "Баскетбол", "Плавание", "Легкая атлетика", "Теннис", "Бокс"]
-    min_age = 14
-    max_age = 50
+class Athlete:
+    """Класс, представляющий спортсмена"""
     
-    def __init__(self, name: str, age: int, sport_type: str, weight: float, personal_record: float = 0):#3/ конструктор с проверкой
-#2/ 6 закрытых атрибутов 
+    # Атрибуты класса теперь берутся из валидатора
+    sport_type_list = AthleteValidator.ALLOWED_SPORT_TYPES
+    min_age = AthleteValidator.MIN_AGE
+    max_age = AthleteValidator.MAX_AGE
+    
+    def __init__(self, name: str, age: int, sport_type: str, weight: float, personal_record: float = 0):
+        """Конструктор с проверкой данных через валидатор"""
+        # Закрытые атрибуты
         self._name = None
         self._age = None
         self._sport_type = None
         self._weight = None
         self._personal_record = None
-        self._is_active = True  #по умолчанию спортсмен активен
+        self._is_active = True  # по умолчанию спортсмен активен
         
-        # Используем свойства для установки значений с валидацией 
+        # Используем свойства для установки значений с валидацией через валидатор
         self.name = name
         self.age = age
         self.sport_type = sport_type
         self.weight = weight
         self.personal_record = personal_record
     
-    # Валидация отдельных полей
+    # Методы валидации теперь используют валидатор
     def _validate_name(self, name: str) -> None:
-        #проверка корректности имени
-        if not isinstance(name, str):
-            raise ValueError("Имя должно быть строкой")
-        if not name.strip():
-            raise ValueError("Имя не может быть пустым")
-        if len(name) < 2:
-            raise ValueError("Имя должно содержать минимум 2 символа")
-        if len(name) > 50:
-            raise ValueError("Имя не может быть длиннее 50 символов")
+        """Проверка корректности имени через валидатор"""
+        AthleteValidator.check_name(name)
     
     def _validate_age(self, age: int) -> None:
-        """Проверка корректности возраста"""
-        if not isinstance(age, int):
-            raise ValueError("Возраст должен быть целым числом")
-        if age < Athlete.min_age or age > Athlete.max_age:
-            raise ValueError(f"Возраст должен быть от {Athlete.min_age} до {Athlete.max_age} лет")
+        """Проверка корректности возраста через валидатор"""
+        AthleteValidator.check_age(age)
     
     def _validate_sport_type(self, sport_type: str) -> None:
-        """Проверка корректности вида спорта"""
-        if not isinstance(sport_type, str):
-            raise ValueError("Вид спорта должен быть строкой")
-        if sport_type not in Athlete.sport_type_list:
-            raise ValueError(f"Вид спорта должен быть одним из: {', '.join(Athlete.sport_type_list)}")
+        """Проверка корректности вида спорта через валидатор"""
+        AthleteValidator.check_sport_type(sport_type)
     
     def _validate_weight(self, weight: float) -> None:
-        """Проверка корректности веса"""
-        if not isinstance(weight, (int, float)):
-            raise ValueError("Вес должен быть числом")
-        if weight <= 0:
-            raise ValueError("Вес должен быть положительным числом")
-        if weight > 200:
-            raise ValueError("Вес не может превышать 200 кг")
+        """Проверка корректности веса через валидатор"""
+        AthleteValidator.check_weight(weight)
     
     def _validate_personal_record(self, record: float) -> None:
-        """Проверка корректности личного рекорда"""
-        if not isinstance(record, (int, float)):
-            raise ValueError("Личный рекорд должен быть числом")
-        if record < 0:
-            raise ValueError("Личный рекорд не может быть отрицательным")
+        """Проверка корректности личного рекорда через валидатор"""
+        AthleteValidator.check_personal_record(record)
     
     # Свойства (геттеры и сеттеры)
-    @property #4 Свойства для чтения Геттеры для доступа к данным
+    @property
     def name(self) -> str:
         """Геттер для имени"""
         return self._name
@@ -106,7 +88,7 @@ class Athlete: #1 Один пользовательский класс
         return self._weight
     
     @weight.setter
-    def weight(self, value: float) -> None: #4 cеттеры с валидацией 
+    def weight(self, value: float) -> None:
         """Сеттер для веса с валидацией"""
         self._validate_weight(value)
         self._weight = float(value)
@@ -129,10 +111,12 @@ class Athlete: #1 Один пользовательский класс
     
     # Бизнес-методы
     def update_record(self, new_record: float) -> str:
+        """Обновление личного рекорда"""
         if not self._is_active:
             raise ValueError("Нельзя обновить рекорд неактивного спортсмена")
         
-        self._validate_personal_record(new_record)
+        # Используем валидатор для проверки нового рекорда
+        AthleteValidator.check_personal_record(new_record)
         
         if new_record > self._personal_record:
             old_record = self._personal_record
@@ -143,29 +127,25 @@ class Athlete: #1 Один пользовательский класс
         else:
             return f"Результат равен текущему рекорду ({self._personal_record:.2f})"
     
-    def train(self, hours: float) -> str: #7 бизнес-метод, метод тренировки
+    def train(self, hours: float) -> str:
+        """Метод тренировки с проверкой через валидатор"""
         if not self._is_active:
             raise ValueError("Нельзя тренировать неактивного спортсмена")
         
-        if not isinstance(hours, (int, float)):
-            raise ValueError("Количество часов должно быть числом")
-        if hours <= 0:
-            raise ValueError("Количество часов должно быть положительным")
-        if hours > 8:
-            raise ValueError("Тренировка не может длиться более 8 часов")
-        
-        # Логика, зависящая от состояния (возраста)
-        if self._age < 18:
-            max_hours = 4
-            if hours > max_hours:
-                return f"Спортсмену до 18 лет рекомендуется тренироваться не более {max_hours} часов. Вы указали {hours} ч."
+        # Используем специальный метод валидатора для тренировок с учетом возраста
+        warning = AthleteValidator.check_junior_training_hours(hours, self._age)
         
         # Расчет сожженных калорий (упрощенно)
         calories_per_hour = 300 + (self._weight * 2)
         total_calories = calories_per_hour * hours
         
-        return (f"{self._name} провел тренировку длительностью {hours} ч. "
-                f"Сожжено примерно {total_calories:.0f} ккал.")
+        result = (f"{self._name} провел тренировку длительностью {hours} ч. "
+                  f"Сожжено примерно {total_calories:.0f} ккал.")
+        
+        if warning:
+            result = f"ПРЕДУПРЕЖДЕНИЕ: {warning}\n  {result}"
+        
+        return result
     
     def deactivate(self) -> None:
         """Деактивация спортсмена"""
@@ -180,14 +160,13 @@ class Athlete: #1 Один пользовательский класс
         self._is_active = True
     
     def get_bmi(self) -> float:
-
-        # Для расчета ИМТ нужен рост, но у нас его нет, поэтому используем упрощенную формулу
+        """Расчет индекса массы тела"""
         height = 1.75  # условный средний рост
         bmi = self._weight / (height ** 2)
         return round(bmi, 2)
     
     def get_age_category(self) -> str:
-
+        """Определение возрастной категории"""
         if self._age < 18:
             return "Юниор"
         elif self._age < 35:
@@ -196,22 +175,21 @@ class Athlete: #1 Один пользовательский класс
             return "Ветеран"
     
     # Магические методы
-    def __str__(self) -> str: #5/ cтроковое представление
-        """
-        Строковое представление для пользователей
-        """
+    def __str__(self) -> str:
+        """Строковое представление для пользователей"""
         status = "активен" if self._is_active else "неактивен"
         return (f"Спортсмен: {self._name} | Возраст: {self._age} | "
                 f"Вид спорта: {self._sport_type} | Вес: {self._weight:.1f} кг | "
                 f"Рекорд: {self._personal_record:.2f} | Статус: {status}")
     
-    def __repr__(self) -> str:  #4  Официальное строковое представление для разработчиков
-
+    def __repr__(self) -> str:
+        """Официальное строковое представление для разработчиков"""
         return (f"Athlete(name='{self._name}', age={self._age}, "
                 f"sport_type='{self._sport_type}', weight={self._weight}, "
                 f"personal_record={self._personal_record})")
     
-    def __eq__(self, other) -> bool: #6 /cравнение по имени и виду спорта
+    def __eq__(self, other) -> bool:
+        """Сравнение по имени и виду спорта"""
         if not isinstance(other, Athlete):
             return False
         return (self._name == other._name and 
