@@ -3,17 +3,17 @@ from two_sem.lab01.validate import AthleteValidator  # Импортируем в
 
 
 def print_header(text):
-    """Вывод заголовка"""
+    #Вывод заголовка
     print(f" {text}")
 
 
 def print_result(text):
-    """Вывод результата с отступом"""
+    #Вывод результата с отступом
     print(f"  {text}")
 
 
 def demonstrate_validator():
-    """Демонстрация работы валидатора отдельно"""
+    #Демонстрация работы валидатора отдельно
     print_header("Демонстрация работы валидатора")
     
     print_result("Проверка корректных данных:")
@@ -36,7 +36,7 @@ def demonstrate_validator():
 
 
 def main():
-    """Основная функция демонстрации"""
+    #Основная функция демонстрации
     
     print_header("Демонстрация класса ATHLETE")
     
@@ -189,8 +189,6 @@ def main():
     
     print_header("конец")
 
-    # ============= ДОБАВЛЕННЫЕ ПРОВЕРКИ ВСЕХ ОШИБОК =============
-    
     print("\n")
     print_header("ОШИБКИ ВАЛИДАЦИИ ПРИ СОЗДАНИИ (через Validator):")
     

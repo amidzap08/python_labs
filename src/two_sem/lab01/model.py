@@ -3,7 +3,7 @@ from two_sem.lab01.validate import AthleteValidator  # Импортируем в
 
 
 class Athlete:
-    """Класс, представляющий спортсмена"""
+    #Класс, представляющий спортсмена
     
     # Атрибуты класса теперь берутся из валидатора
     sport_type_list = AthleteValidator.ALLOWED_SPORT_TYPES
@@ -11,7 +11,7 @@ class Athlete:
     max_age = AthleteValidator.MAX_AGE
     
     def __init__(self, name: str, age: int, sport_type: str, weight: float, personal_record: float = 0):
-        """Конструктор с проверкой данных через валидатор"""
+        #Конструктор с проверкой данных через валидатор
         # Закрытые атрибуты
         self._name = None
         self._age = None
@@ -29,89 +29,89 @@ class Athlete:
     
     # Методы валидации теперь используют валидатор
     def _validate_name(self, name: str) -> None:
-        """Проверка корректности имени через валидатор"""
+        #Проверка корректности имени через валидатор
         AthleteValidator.check_name(name)
     
     def _validate_age(self, age: int) -> None:
-        """Проверка корректности возраста через валидатор"""
+        #Проверка корректности возраста через валидатор
         AthleteValidator.check_age(age)
     
     def _validate_sport_type(self, sport_type: str) -> None:
-        """Проверка корректности вида спорта через валидатор"""
+        #Проверка корректности вида спорта через валидатор
         AthleteValidator.check_sport_type(sport_type)
     
     def _validate_weight(self, weight: float) -> None:
-        """Проверка корректности веса через валидатор"""
+        #Проверка корректности веса через валидатор
         AthleteValidator.check_weight(weight)
     
     def _validate_personal_record(self, record: float) -> None:
-        """Проверка корректности личного рекорда через валидатор"""
+        #Проверка корректности личного рекорда через валидатор
         AthleteValidator.check_personal_record(record)
     
     # Свойства (геттеры и сеттеры)
     @property
     def name(self) -> str:
-        """Геттер для имени"""
+        #Геттер для имени
         return self._name
     
     @name.setter
     def name(self, value: str) -> None:
-        """Сеттер для имени с валидацией"""
+        #Сеттер для имени с валидацией
         self._validate_name(value)
         self._name = value.strip()
     
     @property
     def age(self) -> int:
-        """Геттер для возраста"""
+        #Геттер для возраста
         return self._age
     
     @age.setter
     def age(self, value: int) -> None:
-        """Сеттер для возраста с валидацией"""
+        #Сеттер для возраста с валидацией
         self._validate_age(value)
         self._age = value
     
     @property
     def sport_type(self) -> str:
-        """Геттер для вида спорта"""
+        #Геттер для вида спорта
         return self._sport_type
     
     @sport_type.setter
     def sport_type(self, value: str) -> None:
-        """Сеттер для вида спорта с валидацией"""
+        #Сеттер для вида спорта с валидацией
         self._validate_sport_type(value)
         self._sport_type = value
     
     @property
     def weight(self) -> float:
-        """Геттер для веса"""
+        #Геттер для веса
         return self._weight
     
     @weight.setter
     def weight(self, value: float) -> None:
-        """Сеттер для веса с валидацией"""
+        #Сеттер для веса с валидацией
         self._validate_weight(value)
         self._weight = float(value)
     
     @property
     def personal_record(self) -> float:
-        """Геттер для личного рекорда"""
+        #Геттер для личного рекорд
         return self._personal_record
     
     @personal_record.setter
     def personal_record(self, value: float) -> None:
-        """Сеттер для личного рекорда с валидацией"""
+        #Сеттер для личного рекорда с валидацией
         self._validate_personal_record(value)
         self._personal_record = float(value)
     
     @property
     def is_active(self) -> bool:
-        """Геттер для статуса активности"""
+        #Геттер для статуса активности
         return self._is_active
     
     # Бизнес-методы
     def update_record(self, new_record: float) -> str:
-        """Обновление личного рекорда"""
+        #Обновление личного рекорда
         if not self._is_active:
             raise ValueError("Нельзя обновить рекорд неактивного спортсмена")
         
@@ -128,7 +128,7 @@ class Athlete:
             return f"Результат равен текущему рекорду ({self._personal_record:.2f})"
     
     def train(self, hours: float) -> str:
-        """Метод тренировки с проверкой через валидатор"""
+        #Метод тренировки с проверкой через валидатор
         if not self._is_active:
             raise ValueError("Нельзя тренировать неактивного спортсмена")
         
@@ -148,25 +148,25 @@ class Athlete:
         return result
     
     def deactivate(self) -> None:
-        """Деактивация спортсмена"""
+        #Деактивация спортсмена
         if not self._is_active:
             raise ValueError("Спортсмен уже неактивен")
         self._is_active = False
     
     def activate(self) -> None:
-        """Активация спортсмена"""
+        #Активация спортсмена
         if self._is_active:
             raise ValueError("Спортсмен уже активен")
         self._is_active = True
     
     def get_bmi(self) -> float:
-        """Расчет индекса массы тела"""
+        #Расчет индекса массы тела
         height = 1.75  # условный средний рост
         bmi = self._weight / (height ** 2)
         return round(bmi, 2)
     
     def get_age_category(self) -> str:
-        """Определение возрастной категории"""
+        #Определение возрастной категории
         if self._age < 18:
             return "Юниор"
         elif self._age < 35:
@@ -176,20 +176,20 @@ class Athlete:
     
     # Магические методы
     def __str__(self) -> str:
-        """Строковое представление для пользователей"""
+        #Строковое представление для пользователей
         status = "активен" if self._is_active else "неактивен"
         return (f"Спортсмен: {self._name} | Возраст: {self._age} | "
                 f"Вид спорта: {self._sport_type} | Вес: {self._weight:.1f} кг | "
                 f"Рекорд: {self._personal_record:.2f} | Статус: {status}")
     
     def __repr__(self) -> str:
-        """Официальное строковое представление для разработчиков"""
+        #Официальное строковое представление для разработчиков
         return (f"Athlete(name='{self._name}', age={self._age}, "
                 f"sport_type='{self._sport_type}', weight={self._weight}, "
                 f"personal_record={self._personal_record})")
     
     def __eq__(self, other) -> bool:
-        """Сравнение по имени и виду спорта"""
+        #Сравнение по имени и виду спорта
         if not isinstance(other, Athlete):
             return False
         return (self._name == other._name and 
