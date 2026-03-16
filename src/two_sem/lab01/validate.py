@@ -1,10 +1,4 @@
-"""
-Модуль с классом AthleteValidator для проверки данных спортсмена
-"""
-
-
 class AthleteValidator:
-    """Класс для валидации данных спортсмена"""
 
     # Допустимые виды спорта (атрибут класса из model.py)
     ALLOWED_SPORT_TYPES = ["Футбол", "Баскетбол", "Плавание", "Легкая атлетика", "Теннис", "Бокс"]
@@ -20,16 +14,8 @@ class AthleteValidator:
 
     @classmethod
     def check_name(cls, name: str) -> None:
-        """
-        Проверка имени спортсмена.
 
-        Args:
-            name: имя для проверки.
-
-        Raises:
-            TypeError: если имя не строка.
-            ValueError: если имя пустое, слишком короткое или слишком длинное.
-        """
+       # Проверка имени спортсмена.
         if not isinstance(name, str):
             raise TypeError("Имя должно быть строкой")
         if not name.strip():
@@ -41,16 +27,9 @@ class AthleteValidator:
 
     @classmethod
     def check_age(cls, age: int) -> None:
-        """
-        Проверка возраста спортсмена.
 
-        Args:
-            age: возраст для проверки.
+      #  Проверка возраста спортсмена.
 
-        Raises:
-            TypeError: если возраст не целое число.
-            ValueError: если возраст вне допустимого диапазона.
-        """
         if not isinstance(age, int):
             raise TypeError("Возраст должен быть целым числом")
         if age < cls.MIN_AGE or age > cls.MAX_AGE:
@@ -58,16 +37,9 @@ class AthleteValidator:
 
     @classmethod
     def check_sport_type(cls, sport_type: str) -> None:
-        """
-        Проверка вида спорта.
 
-        Args:
-            sport_type: вид спорта для проверки.
+       # Проверка вида спорта.
 
-        Raises:
-            TypeError: если вид спорта не строка.
-            ValueError: если вид спорта не входит в список допустимых.
-        """
         if not isinstance(sport_type, str):
             raise TypeError("Вид спорта должен быть строкой")
         if sport_type not in cls.ALLOWED_SPORT_TYPES:
@@ -75,16 +47,9 @@ class AthleteValidator:
 
     @classmethod
     def check_weight(cls, weight: float) -> None:
-        """
-        Проверка веса спортсмена.
 
-        Args:
-            weight: вес для проверки.
+      #Проверка веса спортсмена.
 
-        Raises:
-            TypeError: если вес не число.
-            ValueError: если вес не положительный или превышает максимум.
-        """
         if not isinstance(weight, (int, float)):
             raise TypeError("Вес должен быть числом")
         if weight <= 0:
@@ -94,16 +59,9 @@ class AthleteValidator:
 
     @classmethod
     def check_personal_record(cls, record: float) -> None:
-        """
-        Проверка личного рекорда спортсмена.
 
-        Args:
-            record: личный рекорд для проверки.
+       # Проверка личного рекорда спортсмена.
 
-        Raises:
-            TypeError: если рекорд не число.
-            ValueError: если рекорд отрицательный.
-        """
         if not isinstance(record, (int, float)):
             raise TypeError("Личный рекорд должен быть числом")
         if record < 0:
@@ -111,30 +69,16 @@ class AthleteValidator:
 
     @staticmethod
     def check_is_active(status: bool) -> None:
-        """
-        Проверка, что статус активности является булевым значением.
 
-        Args:
-            status: статус для проверки.
+      #  Проверка, что статус активности является булевым значением.
 
-        Raises:
-            TypeError: если статус не булевое значение.
-        """
         if not isinstance(status, bool):
             raise TypeError("Статус активности должен быть булевым значением")
 
     @classmethod
     def check_training_hours(cls, hours: float) -> None:
-        """
-        Проверка количества часов для тренировки (базовая проверка).
 
-        Args:
-            hours: количество часов для проверки.
-
-        Raises:
-            TypeError: если часы не число.
-            ValueError: если часы не положительные или превышают лимит.
-        """
+        #Проверка количества часов для тренировки (базовая проверка).
         if not isinstance(hours, (int, float)):
             raise TypeError("Количество часов должно быть числом")
         if hours <= 0:
@@ -144,16 +88,6 @@ class AthleteValidator:
 
     @classmethod
     def check_junior_training_hours(cls, hours: float, age: int) -> None:
-        """
-        Проверка количества часов для тренировки с учетом возраста.
-
-        Args:
-            hours: количество часов для проверки.
-            age: возраст спортсмена.
-
-        Returns:
-            str: Предупреждение для юниоров, если превышен лимит.
-        """
         cls.check_training_hours(hours)
         
         if age < 18 and hours > cls.MAX_TRAINING_HOURS_JUNIOR:
@@ -163,19 +97,6 @@ class AthleteValidator:
 
     @classmethod
     def check_all(cls, name: str, age: int, sport_type: str, weight: float, personal_record: float) -> None:
-        """
-        Комплексная проверка всех данных спортсмена при создании.
-
-        Args:
-            name: имя для проверки.
-            age: возраст для проверки.
-            sport_type: вид спорта для проверки.
-            weight: вес для проверки.
-            personal_record: личный рекорд для проверки.
-
-        Raises:
-            Соответствующие исключения от вызываемых методов проверки.
-        """
         cls.check_name(name)
         cls.check_age(age)
         cls.check_sport_type(sport_type)
