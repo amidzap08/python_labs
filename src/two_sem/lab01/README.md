@@ -327,4 +327,9 @@ athlete2 реактивирован
  ```
 
  ![model.py](https://github.com/amidzap08/python_labs/blob/main/src/two_sem/lab01/model.py)
+
+
  ![validate.py](https://github.com/amidzap08/python_labs/blob/main/src/two_sem/lab01/validate.py)
+
+ 
+ ![demo.py](https://github.com/amidzap08/python_labs/blob/main/src/two_sem/lab01/demo.py)
