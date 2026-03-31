@@ -30,7 +30,7 @@ def validate_height(height: float) -> None:
         raise ValueError("Рост не может быть меньше 50 см")
 
 def validate_record(record: float) -> None:
-    """Проверяет, что личный рекорд - неотрицательное число."""
+    """Проверяет, что рекорд (очки) - неотрицательное число."""
     if not isinstance(record, (int, float)):
         raise TypeError("Рекорд должен быть числом")
     if record < 0:
@@ -44,15 +44,15 @@ def validate_health_status(status: str) -> None:
     if status not in allowed:
         raise ValueError(f"Статус здоровья должен быть одним из: {allowed}")
 
-def validate_training_level(level: str) -> None:
-    """Проверяет, что уровень подготовки допустим."""
-    allowed = ("beginner", "intermediate", "advanced", "professional")
-    if level not in allowed:
-        raise ValueError(f"Уровень подготовки должен быть одним из: {allowed}")
+def validate_division(division: str) -> None:
+    """Проверяет, что дивизион допустим."""
+    allowed = ("beginner", "intermediate", "professional", "elite")
+    if division not in allowed:
+        raise ValueError(f"Дивизион должен быть одним из: {allowed}")
 
 def validate_morale(morale: int) -> None:
     """Проверяет, что мораль - целое число от 0 до 10."""
     if not isinstance(morale, int):
-        raise TypeError("Мораль должна быть целым числом")
+        raise TypeError("Уровень мотивации должен быть целым числом")
     if morale < 0 or morale > 10:
-        raise ValueError("Мораль должна быть от 0 до 10")
+        raise ValueError("Уровень мотивации должен быть от 0 до 10")

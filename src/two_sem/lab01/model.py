@@ -1,34 +1,34 @@
 from two_sem.lab01 import validate
 
-class Athlete:
-    total_athletes = 0
+class Team:
+    total_teams = 0
     sport_type = "running"
-    default_training_level = "beginner"
+    default_division = "beginner"
     max_morale = 10
     min_morale = 0
     weight_unit = "kg"
     height_unit = "cm"
-    record_unit = "kg"
+    record_unit = "points"
 
-    def __init__(self, name: str, weight: float, height: float, record: float = 0.0):
+    def __init__(self, name: str, avg_weight: float, avg_height: float, total_points: float = 0.0):
         # Валидация входных данных
         validate.validate_name(name)
-        validate.validate_weight(weight)
-        validate.validate_height(height)
-        validate.validate_record(record)
+        validate.validate_weight(avg_weight)
+        validate.validate_height(avg_height)
+        validate.validate_record(total_points)
 
         self._name = name.strip()
-        self._weight = weight
-        self._height = height
-        self._personal_record = record
+        self._avg_weight = avg_weight
+        self._avg_height = avg_height
+        self._total_points = total_points
 
         # Состояния
         self._is_active = True
         self._health_status = "healthy"
-        self._training_level = Athlete.default_training_level
-        self._morale = Athlete.max_morale
+        self._division = Team.default_division
+        self._morale = Team.max_morale
 
-        Athlete.total_athletes += 1
+        Team.total_teams += 1
 
     # Свойства (геттеры) для всех атрибутов
     @property
@@ -36,44 +36,44 @@ class Athlete:
         return self._name
 
     @property
-    def weight(self) -> float:
-        return self._weight
+    def avg_weight(self) -> float:
+        return self._avg_weight
 
-    @weight.setter
-    def weight(self, value: float) -> None:
+    @avg_weight.setter
+    def avg_weight(self, value: float) -> None:
         validate.validate_weight(value)
-        self._weight = value
+        self._avg_weight = value
 
     @property
-    def height(self) -> float:
-        return self._height
+    def avg_height(self) -> float:
+        return self._avg_height
 
-    @height.setter
-    def height(self, value: float) -> None:
+    @avg_height.setter
+    def avg_height(self, value: float) -> None:
         validate.validate_height(value)
-        self._height = value
+        self._avg_height = value
 
     @property
-    def personal_record(self) -> float:
-        return self._personal_record
+    def total_points(self) -> float:
+        return self._total_points
 
-    @personal_record.setter
-    def personal_record(self, value: float) -> None:
+    @total_points.setter
+    def total_points(self, value: float) -> None:
         # Проверка состояния здоровья и активности
         if not self._is_active:
-            raise RuntimeError("Нельзя изменить рекорд неактивного спортсмена")
+            raise RuntimeError("Нельзя изменить очки неактивной команды")
         if self._health_status == "injured":
-            raise RuntimeError("Нельзя изменить рекорд при травме")
+            raise RuntimeError("Нельзя изменить очки при травмах в команде")
         if self._health_status == "recovering":
-            print("Предупреждение: Спортсмен восстанавливается, установка рекорда может быть рискованной")
+            print("Предупреждение: Команда восстанавливается, изменение очков может быть рискованным")
 
-        # Проверка ограничений по уровню подготовки
-        max_record = self._max_record_for_level()
-        if value > max_record:
-            raise ValueError(f"Рекорд {value} превышает максимально допустимый для уровня {self._training_level} ({max_record})")
+        # Проверка ограничений по дивизиону
+        max_points = self._max_points_for_division()
+        if value > max_points:
+            raise ValueError(f"Очки {value} превышают максимально допустимые для дивизиона {self._division} ({max_points})")
 
         validate.validate_record(value)
-        self._personal_record = value
+        self._total_points = value
 
     @property
     def is_active(self) -> bool:
@@ -84,8 +84,8 @@ class Athlete:
         return self._health_status
 
     @property
-    def training_level(self) -> str:
-        return self._training_level
+    def division(self) -> str:
+        return self._division
 
     @property
     def morale(self) -> int:
@@ -100,65 +100,65 @@ class Athlete:
     def activate(self) -> None:
         if not self._is_active:
             self._is_active = True
-            print(f"{self._name} активирован")
+            print(f"{self._name} активирована")
 
     def deactivate(self) -> None:
         if self._is_active:
             self._is_active = False
-            print(f"{self._name} деактивирован")
+            print(f"{self._name} деактивирована")
 
     def injure(self) -> None:
         if self._health_status != "injured":
             self._health_status = "injured"
-            print(f"{self._name} получил травму")
+            print(f"{self._name} получила травмы в команде")
 
     def recover(self) -> None:
         if self._health_status == "injured":
             self._health_status = "recovering"
-            print(f"{self._name} начал восстановление")
+            print(f"{self._name} начала восстановление")
         else:
-            print(f"{self._name} не травмирован. Текущий статус: {self._health_status}")
+            print(f"{self._name} не травмирована. Текущий статус: {self._health_status}")
 
     def heal(self) -> None:
-        """Полное излечение (становится здоровым)."""
+        """Полное излечение (становится здоровой)."""
         self._health_status = "healthy"
-        print(f"{self._name} полностью здоров")
+        print(f"{self._name} полностью здорова")
 
-    def set_training_level(self, level: str) -> None:
-        validate.validate_training_level(level)
-        self._training_level = level
-        print(f"Уровень подготовки {self._name} изменен на {level}")
+    def set_division(self, division: str) -> None:
+        validate.validate_division(division)
+        self._division = division
+        print(f"Дивизион {self._name} изменен на {division}")
 
     # Вспомогательные методы
-    def _max_record_for_level(self) -> float:
+    def _max_points_for_division(self) -> float:
         limits = {
             "beginner": 100,
             "intermediate": 200,
-            "advanced": 350,
-            "professional": 500
+            "professional": 350,
+            "elite": 500
         }
-        return limits[self._training_level]
+        return limits[self._division]
 
     # Бизнес-методы
-    def set_record(self, new_record: float) -> None:
-        """Установить новый личный рекорд (использует сеттер)."""
-        self.personal_record = new_record
+    def set_points(self, new_points: float) -> None:
+        """Установить новые очки команды (использует сеттер)."""
+        self.total_points = new_points
 
-    def bmi(self) -> float:
-        """Расчет индекса массы тела."""
-        height_m = self._height / 100
-        return round(self._weight / (height_m ** 2), 2)
+    def avg_bmi(self) -> float:
+        """Расчет среднего индекса массы тела команды."""
+        height_m = self._avg_height / 100
+        return round(self._avg_weight / (height_m ** 2), 2)
 
     def performance_score(self) -> float:
-        """Расчет показателя производительности."""
+        """Расчет показателя производительности команды."""
         if not self._is_active:
             return 0.0
         
-        level_multipliers = {
+        division_multipliers = {
             "beginner": 1.0,
             "intermediate": 1.5,
-            "advanced": 2.0,
-            "professional": 3.0
+            "professional": 2.0,
+            "elite": 3.0
         }
         
         health_penalty = {
@@ -167,30 +167,30 @@ class Athlete:
             "injured": 0.0
         }
         
-        multiplier = level_multipliers[self._training_level]
-        health_factor = health_penalty[self._health_status]
-        morale_factor = self._morale / Athlete.max_morale
+        multiplier = division_multipliers.get(self._division, 1.0)
+        health_factor = health_penalty.get(self._health_status, 1.0)
+        morale_factor = self._morale / Team.max_morale
         
-        score = self._personal_record * multiplier * health_factor * morale_factor
+        score = self._total_points * multiplier * health_factor * morale_factor
         return round(score, 2)
 
     # Магические методы
     def __str__(self) -> str:
-        status = "активен" if self._is_active else "неактивен"
-        return (f"Спортсмен: {self._name}, вес: {self._weight}{Athlete.weight_unit}, "
-                f"рост: {self._height}{Athlete.height_unit}, "
-                f"рекорд: {self._personal_record}{Athlete.record_unit}, ИМТ: {self.bmi()}, "
-                f"здоровье: {self._health_status}, уровень: {self._training_level}, "
-                f"Уровень мотивации: {self._morale}/{Athlete.max_morale}, статус: {status}")
+        status = "активна" if self._is_active else "неактивна"
+        return (f"Команда: {self._name}, средний вес: {self._avg_weight}{Team.weight_unit}, "
+                f"средний рост: {self._avg_height}{Team.height_unit}, "
+                f"очки: {self._total_points}{Team.record_unit}, средний ИМТ: {self.avg_bmi()}, "
+                f"здоровье: {self._health_status}, дивизион: {self._division}, "
+                f"уровень мотивации: {self._morale}/{Team.max_morale}, статус: {status}")
 
     def __repr__(self) -> str:
-        return (f"Athlete(name='{self._name}', weight={self._weight}, "
-                f"height={self._height}, record={self._personal_record})")
+        return (f"Team(name='{self._name}', avg_weight={self._avg_weight}, "
+                f"avg_height={self._avg_height}, total_points={self._total_points})")
 
     def __eq__(self, other) -> bool:
-        if not isinstance(other, Athlete):
+        if not isinstance(other, Team):
             return False
         return (self._name == other._name and
-                self._weight == other._weight and
-                self._height == other._height and
-                self._personal_record == other._personal_record)
+                self._avg_weight == other._avg_weight and
+                self._avg_height == other._avg_height and
+                self._total_points == other._total_points)
