@@ -1,267 +1,312 @@
-"""
-Модуль collection.py - класс Team (коллекция спортсменов)
-"""
-
-from typing import List, Optional, Callable
-from two_sem.lab01.model import Athlete
+from typing import List, Optional, Iterator, Callable
+from two_sem.lab01.model import Team
 
 
-class Team:
+class TeamCollection:
     """
-    Класс Team - коллекция спортсменов
-    Управляет группой объектов Athlete
+    Контейнерный класс для хранения объектов Team.
+    Реализует основные операции управления коллекцией.
     """
     
-    def __init__(self, name: str = ""):
+    def __init__(self):
+        """Инициализация пустой коллекции."""
+        self._items: List[Team] = []
+    
+    # ============= Задание на 3 =============
+    
+    def add(self, team: Team) -> None:
         """
-        Конструктор коллекции
+        Добавить объект Team в коллекцию.
         
         Args:
-            name: Название команды
-        """
-        self._name = name
-        self._items: List[Athlete] = []
-    
-    @property
-    def name(self) -> str:
-        """Получить название команды"""
-        return self._name
-    
-    @name.setter
-    def name(self, value: str):
-        """Установить название команды"""
-        self._name = value
-    
-    def add(self, athlete: Athlete) -> bool:
-        """
-        Добавить спортсмена в команду
-        
-        Args:
-            athlete: Объект Athlete для добавления
-            
-        Returns:
-            bool: True если добавление успешно, False если спортсмен уже существует
+            team: Объект Team для добавления
             
         Raises:
-            TypeError: Если передан не объект Athlete
+            TypeError: Если добавляемый объект не является Team
+            ValueError: Если команда с таким именем уже существует
         """
-        # Проверяем тип
-        if not isinstance(athlete, Athlete):
-            raise TypeError("Можно добавлять только объекты класса Athlete")
+        # Проверка типа
+        if not isinstance(team, Team):
+            raise TypeError(f"Можно добавлять только объекты Team, получен {type(team).__name__}")
         
-        # Проверка на дубликат по имени (как уникальному идентификатору)
-        if self.find_by_name(athlete.name) is not None:
-            return False
+        # Проверка на дубликат по имени (задание на 4)
+        if self._find_by_name(team.name) is not None:
+            raise ValueError(f"Команда с именем '{team.name}' уже существует в коллекции")
         
-        self._items.append(athlete)
-        return True
+        self._items.append(team)
     
-    def remove(self, athlete: Athlete) -> bool:
+    def remove(self, team: Team) -> bool:
         """
-        Удалить спортсмена из команды
+        Удалить объект Team из коллекции.
         
         Args:
-            athlete: Объект Athlete для удаления
+            team: Объект Team для удаления
             
         Returns:
-            bool: True если удаление успешно, False если спортсмен не найден
+            bool: True если удаление успешно, False если объект не найден
         """
-        if athlete in self._items:
-            self._items.remove(athlete)
+        try:
+            self._items.remove(team)
             return True
-        return False
+        except ValueError:
+            return False
     
-    def remove_at(self, index: int) -> Optional[Athlete]:
+    def get_all(self) -> List[Team]:
         """
-        Удалить спортсмена по индексу
-        
-        Args:
-            index: Индекс элемента для удаления
-            
-        Returns:
-            Optional[Athlete]: Удаленный спортсмен или None если индекс недействителен
-        """
-        if 0 <= index < len(self._items):
-            return self._items.pop(index)
-        return None
-    
-    def get_all(self) -> List[Athlete]:
-        """
-        Получить список всех спортсменов
+        Вернуть список всех объектов в коллекции.
         
         Returns:
-            List[Athlete]: Копия списка спортсменов
+            List[Team]: Копия списка объектов
         """
         return self._items.copy()
     
-    def find_by_name(self, name: str) -> Optional[Athlete]:
-        """
-        Найти спортсмена по имени
-        
-        Args:
-            name: Имя спортсмена
-            
-        Returns:
-            Optional[Athlete]: Найденный спортсмен или None
-        """
-        for athlete in self._items:
-            if athlete.name.lower() == name.lower():
-                return athlete
+    # ============= Задание на 4 =============
+    
+    def _find_by_name(self, name: str) -> Optional[Team]:
+        """Внутренний метод поиска по имени."""
+        for team in self._items:
+            if team.name == name:
+                return team
         return None
     
-    def find_by_training_level(self, level: str) -> List[Athlete]:
+    def find_by_name(self, name: str) -> Optional[Team]:
         """
-        Найти спортсменов по уровню подготовки
+        Поиск команды по имени.
         
         Args:
-            level: Уровень подготовки
+            name: Имя команды
             
         Returns:
-            List[Athlete]: Список найденных спортсменов
+            Optional[Team]: Найденная команда или None
         """
-        return [a for a in self._items if a.training_level == level]
+        return self._find_by_name(name)
     
-    def find_by_health_status(self, status: str) -> List[Athlete]:
+    def find_by_division(self, division: str) -> List[Team]:
         """
-        Найти спортсменов по статусу здоровья
+        Поиск команд по дивизиону.
         
         Args:
-            status: Статус здоровья
+            division: Название дивизиона
             
         Returns:
-            List[Athlete]: Список найденных спортсменов
+            List[Team]: Список команд в указанном дивизионе
         """
-        return [a for a in self._items if a.health_status == status]
+        return [team for team in self._items if team.division == division]
     
-    def find_active(self) -> List[Athlete]:
+    def find_by_health_status(self, status: str) -> List[Team]:
         """
-        Найти активных спортсменов
-        
-        Returns:
-            List[Athlete]: Список активных спортсменов
-        """
-        return [a for a in self._items if a.is_active]
-    
-    def find_by_performance(self, min_score: float = 0) -> List[Athlete]:
-        """
-        Найти спортсменов с производительностью выше заданного порога
+        Поиск команд по статусу здоровья.
         
         Args:
-            min_score: Минимальное значение производительности
+            status: Статус здоровья (healthy, recovering, injured)
             
         Returns:
-            List[Athlete]: Список найденных спортсменов
+            List[Team]: Список команд с указанным статусом здоровья
         """
-        return [a for a in self._items if a.performance_score() >= min_score]
+        return [team for team in self._items if team.health_status == status]
+    
+    def find_active(self) -> List[Team]:
+        """
+        Поиск активных команд.
+        
+        Returns:
+            List[Team]: Список активных команд
+        """
+        return [team for team in self._items if team.is_active]
     
     def __len__(self) -> int:
-        """Возвращает количество спортсменов в команде"""
+        """
+        Возвращает количество объектов в коллекции.
+        
+        Returns:
+            int: Размер коллекции
+        """
         return len(self._items)
     
-    def __iter__(self):
-        """Возвращает итератор по спортсменам"""
+    def __iter__(self) -> Iterator[Team]:
+        """
+        Возвращает итератор для обхода коллекции.
+        
+        Returns:
+            Iterator[Team]: Итератор по объектам Team
+        """
         return iter(self._items)
     
-    def __getitem__(self, index):
+    # ============= Задание на 5 =============
+    
+    def __getitem__(self, index: int) -> Team:
         """
-        Доступ к спортсмену по индексу
+        Индексация коллекции с поддержкой отрицательных индексов.
         
         Args:
-            index: Индекс или срез
+            index: Индекс элемента (может быть отрицательным)
             
         Returns:
-            Athlete или список спортсменов
+            Team: Объект Team по указанному индексу
+            
+        Raises:
+            IndexError: Если индекс вне диапазона
+            TypeError: Если индекс не целое число
         """
+        if not isinstance(index, int):
+            raise TypeError("Индекс должен быть целым числом")
+        
+        # Преобразуем отрицательный индекс в положительный
+        if index < 0:
+            index = len(self._items) + index
+        
+        if index < 0 or index >= len(self._items):
+            raise IndexError(f"Индекс {index} вне диапазона (0-{len(self._items)-1})")
+        
         return self._items[index]
     
-    def __setitem__(self, index, value):
-        """Установка спортсмена по индексу"""
-        if not isinstance(value, Athlete):
-            raise TypeError("Можно устанавливать только объекты класса Athlete")
-        self._items[index] = value
-    
-    def sort(self, key: Optional[Callable] = None, reverse: bool = False):
+    def remove_at(self, index: int) -> Team:
         """
-        Сортировка спортсменов
+        Удаление объекта по индексу (с поддержкой отрицательных индексов).
+        
+        Args:
+            index: Индекс элемента для удаления (может быть отрицательным)
+            
+        Returns:
+            Team: Удаленный объект
+            
+        Raises:
+            IndexError: Если индекс вне диапазона
+        """
+        if not isinstance(index, int):
+            raise TypeError("Индекс должен быть целым числом")
+        
+        # Преобразуем отрицательный индекс в положительный
+        if index < 0:
+            index = len(self._items) + index
+        
+        if index < 0 or index >= len(self._items):
+            raise IndexError(f"Индекс {index} вне диапазона (0-{len(self._items)-1})")
+        
+        return self._items.pop(index)
+    
+    def sort(self, key: Optional[Callable[[Team], any]] = None, reverse: bool = False) -> None:
+        """
+        Сортировка коллекции.
         
         Args:
             key: Функция для получения ключа сортировки
-            reverse: Сортировать в обратном порядке
+            reverse: Сортировка в обратном порядке
         """
         if key is None:
-            self._items.sort(reverse=reverse)
+            # Сортировка по умолчанию по имени
+            self._items.sort(key=lambda team: team.name, reverse=reverse)
         else:
             self._items.sort(key=key, reverse=reverse)
     
-    def sort_by_name(self, reverse: bool = False):
-        """Сортировка по имени"""
-        self.sort(key=lambda a: a.name, reverse=reverse)
+    def sort_by_name(self, reverse: bool = False) -> None:
+        """Сортировка по имени команды."""
+        self.sort(key=lambda team: team.name, reverse=reverse)
     
-    def sort_by_record(self, reverse: bool = False):
-        """Сортировка по личному рекорду"""
-        self.sort(key=lambda a: a.personal_record, reverse=reverse)
+    def sort_by_points(self, reverse: bool = False) -> None:
+        """Сортировка по количеству очков."""
+        self.sort(key=lambda team: team.total_points, reverse=reverse)
     
-    def sort_by_performance(self, reverse: bool = False):
-        """Сортировка по производительности"""
-        self.sort(key=lambda a: a.performance_score(), reverse=reverse)
+    def sort_by_performance(self, reverse: bool = False) -> None:
+        """Сортировка по производительности."""
+        self.sort(key=lambda team: team.performance_score(), reverse=reverse)
     
-    def sort_by_bmi(self, reverse: bool = False):
-        """Сортировка по индексу массы тела"""
-        self.sort(key=lambda a: a.bmi(), reverse=reverse)
+    def sort_by_morale(self, reverse: bool = False) -> None:
+        """Сортировка по уровню мотивации."""
+        self.sort(key=lambda team: team.morale, reverse=reverse)
     
-    def get_active_athletes(self) -> 'Team':
+    # Логические операции над коллекцией
+    
+    def get_active_teams(self) -> 'TeamCollection':
         """
-        Получить новую коллекцию только с активными спортсменами
+        Получить новую коллекцию только с активными командами.
         
         Returns:
-            Team: Новая коллекция с активными спортсменами
+            TeamCollection: Новая коллекция с активными командами
         """
-        active_team = Team(f"{self._name} (активные)")
-        for athlete in self._items:
-            if athlete.is_active:
-                active_team.add(athlete)
-        return active_team
+        new_collection = TeamCollection()
+        for team in self._items:
+            if team.is_active:
+                new_collection.add(team)
+        return new_collection
     
-    def get_healthy_athletes(self) -> 'Team':
+    def get_healthy_teams(self) -> 'TeamCollection':
         """
-        Получить новую коллекцию только со здоровыми спортсменами
+        Получить новую коллекцию только со здоровыми командами.
         
         Returns:
-            Team: Новая коллекция со здоровыми спортсменами
+            TeamCollection: Новая коллекция со здоровыми командами
         """
-        healthy_team = Team(f"{self._name} (здоровые)")
-        for athlete in self._items:
-            if athlete.health_status == "healthy":
-                healthy_team.add(athlete)
-        return healthy_team
+        new_collection = TeamCollection()
+        for team in self._items:
+            if team.health_status == "healthy":
+                new_collection.add(team)
+        return new_collection
     
-    def get_by_training_level(self, level: str) -> 'Team':
+    def get_high_performance_teams(self, threshold: float = 100.0) -> 'TeamCollection':
         """
-        Получить новую коллекцию спортсменов с заданным уровнем подготовки
+        Получить новую коллекцию команд с производительностью выше порога.
         
         Args:
-            level: Уровень подготовки
+            threshold: Пороговое значение производительности
             
         Returns:
-            Team: Новая коллекция с отфильтрованными спортсменами
+            TeamCollection: Новая коллекция с высокопроизводительными командами
         """
-        filtered_team = Team(f"{self._name} ({level})")
-        for athlete in self._items:
-            if athlete.training_level == level:
-                filtered_team.add(athlete)
-        return filtered_team
+        new_collection = TeamCollection()
+        for team in self._items:
+            if team.performance_score() >= threshold:
+                new_collection.add(team)
+        return new_collection
+    
+    def get_teams_in_division(self, division: str) -> 'TeamCollection':
+        """
+        Получить новую коллекцию команд из указанного дивизиона.
+        
+        Args:
+            division: Название дивизиона
+            
+        Returns:
+            TeamCollection: Новая коллекция команд из дивизиона
+        """
+        new_collection = TeamCollection()
+        for team in self._items:
+            if team.division == division:
+                new_collection.add(team)
+        return new_collection
+    
+    # Дополнительные методы для удобства
+    
+    def clear(self) -> None:
+        """Очистить коллекцию."""
+        self._items.clear()
+    
+    def is_empty(self) -> bool:
+        """Проверить, пуста ли коллекция."""
+        return len(self._items) == 0
+    
+    def __contains__(self, team: Team) -> bool:
+        """
+        Проверка наличия объекта в коллекции.
+        
+        Args:
+            team: Объект Team для проверки
+            
+        Returns:
+            bool: True если объект присутствует в коллекции
+        """
+        return team in self._items
     
     def __str__(self) -> str:
-        """Строковое представление коллекции"""
+        """Строковое представление коллекции."""
         if not self._items:
-            return f"Команда '{self._name}' пуста"
+            return "TeamCollection: пусто"
         
-        result = f"Команда '{self._name}' (всего: {len(self._items)} спортсменов):\n"
-        for i, athlete in enumerate(self._items, 1):
-            result += f"  {i}. {athlete.name} (рекорд: {athlete.personal_record}, "
-            result += f"уровень: {athlete.training_level}, статус: {'активен' if athlete.is_active else 'неактивен'})\n"
+        result = f"TeamCollection ({len(self._items)} команд):\n"
+        for i, team in enumerate(self._items, 1):
+            result += f"{i}. {team.name} - {team.division} - {team.performance_score()} очков производительности\n"
         return result
     
     def __repr__(self) -> str:
-        """Отладочное представление коллекции"""
-        return f"Team(name='{self._name}', athletes={len(self._items)})"
+        """Подробное строковое представление коллекции."""
+        return f"TeamCollection({repr(self._items)})"

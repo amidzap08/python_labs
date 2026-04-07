@@ -1,7 +1,7 @@
 import time
 import random
-from lab10.structures import Stack, Queue
-from lab10.linked_list import SinglyLinkedList
+from one_sem.lab10.structures import Stack, Queue
+from one_sem.lab10.linked_list import SinglyLinkedList
 
 
 def benchmark_push_pop(n: int = 100000) -> dict:

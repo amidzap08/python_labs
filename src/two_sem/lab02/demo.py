@@ -1,214 +1,262 @@
 """
-Модуль demo.py - демонстрация работы класса Team
+Демонстрация работы контейнерного класса TeamCollection.
+Показывает все возможности коллекции согласно требованиям ЛР-2.
 """
 
-from two_sem.lab01.model import Athlete
-from two_sem.lab02.collection import Team
+from two_sem.lab02.collection import TeamCollection
+from two_sem.lab01.model import Team
 
 
-def print_separator(title: str = ""):
-    """Печать разделителя"""
-    print("\n" + "=" * 60)
-    if title:
-        print(f" {title} ")
-        print("=" * 60)
-
-
-def main():
-    """Основная функция демонстрации"""
+def demonstrate_basic_operations():
+    """Демонстрация базовых операций (Задание на 3)."""
+    print("\nЗадание на 3 - Базовые операции")
     
-    # ========== Демонстрация задания на 3 ==========
-    print_separator("ЗАДАНИЕ НА 3")
+    collection = TeamCollection()
+    print(f"Создана пустая коллекция: {len(collection)} элементов")
     
-    # Создание спортсменов
-    print("\n1. Создание спортсменов:")
-    athlete1 = Athlete("Иван Петров", 75.5, 180, 120.0, "intermediate", "healthy", 8)
-    athlete2 = Athlete("Мария Смирнова", 62.0, 165, 95.0, "beginner", "healthy", 7)
-    athlete3 = Athlete("Алексей Иванов", 85.0, 190, 150.0, "advanced", "recovering", 6)
-    athlete4 = Athlete("Елена Кузнецова", 58.5, 170, 110.0, "intermediate", "healthy", 9)
+    team1 = Team("Alpha", 72.5, 175.0, 150.0)
+    team2 = Team("Beta", 68.0, 170.0, 120.0)
+    team3 = Team("Gamma", 75.0, 180.0, 200.0)
     
-    print(f"  - {athlete1.name}")
-    print(f"  - {athlete2.name}")
-    print(f"  - {athlete3.name}")
-    print(f"  - {athlete4.name}")
+    print(f"\nСозданы команды:")
+    print(f"  - {team1.name}")
+    print(f"  - {team2.name}")
+    print(f"  - {team3.name}")
     
-    # Создание команды и добавление спортсменов
-    print("\n2. Создание команды 'Сборная России':")
-    team = Team("Сборная России")
+    print(f"\nДобавление команд в коллекцию:")
+    collection.add(team1)
+    print(f"  + Добавлена {team1.name}")
+    collection.add(team2)
+    print(f"  + Добавлена {team2.name}")
+    collection.add(team3)
+    print(f"  + Добавлена {team3.name}")
     
-    print("   Добавление спортсменов:")
-    for athlete in [athlete1, athlete2, athlete3, athlete4]:
-        if team.add(athlete):
-            print(f"   ✓ Добавлен: {athlete.name}")
-        else:
-            print(f"   ✗ Не добавлен: {athlete.name} (уже существует)")
+    print(f"\nВсе элементы коллекции ({len(collection)}):")
+    all_teams = collection.get_all()
+    for i, team in enumerate(all_teams, 1):
+        print(f"  {i}. {team.name} (очки: {team.total_points})")
     
-    # Попытка добавить спортсмена с существующим именем
-    print("\n3. Попытка добавить дубликат:")
-    duplicate = Athlete("Иван Петров", 80.0, 185, 130.0, "advanced", "healthy", 7)
-    if not team.add(duplicate):
-        print(f"   ✗ Не удалось добавить: {duplicate.name} (спортсмен с таким именем уже есть)")
+    print(f"\nУдаление команды {team2.name}:")
+    collection.remove(team2)
+    print(f"  - Удалена {team2.name}")
     
-    # Попытка добавить объект неправильного типа
-    print("\n4. Попытка добавить объект неправильного типа:")
+    print(f"\nКоллекция после удаления ({len(collection)}):")
+    for i, team in enumerate(collection.get_all(), 1):
+        print(f"  {i}. {team.name} (очки: {team.total_points})")
+    
+    print(f"\nПроверка валидации типа:")
     try:
-        team.add("Это не спортсмен")
+        collection.add("не команда")
     except TypeError as e:
-        print(f"   ✗ Ошибка: {e}")
+        print(f"  Ошибка (ожидаемо): {e}")
     
-    # Вывод всех спортсменов
-    print("\n5. Все спортсмены в команде:")
-    all_athletes = team.get_all()
-    for athlete in all_athletes:
-        print(f"   - {athlete.name}")
+    print(f"\nПроверка на дубликаты:")
+    try:
+        collection.add(team1)
+    except ValueError as e:
+        print(f"  Ошибка (ожидаемо): {e}")
+
+
+def demonstrate_search_and_iteration():
+    """Демонстрация поиска и итерации (Задание на 4)."""
+    print("\nЗадание на 4 - Поиск и итерация")
     
-    # Удаление спортсмена
-    print("\n6. Удаление спортсмена:")
-    if team.remove(athlete3):
-        print(f"   ✓ Удален: {athlete3.name}")
+    collection = TeamCollection()
     
-    print("\n7. Список после удаления:")
-    for athlete in team.get_all():
-        print(f"   - {athlete.name}")
+    teams_data = [
+        ("Alpha", 72.5, 175.0, 150.0, "intermediate", "healthy"),
+        ("Beta", 68.0, 170.0, 120.0, "beginner", "healthy"),
+        ("Gamma", 75.0, 180.0, 200.0, "professional", "injured"),
+        ("Delta", 70.0, 172.0, 180.0, "intermediate", "recovering"),
+        ("Epsilon", 65.0, 168.0, 250.0, "elite", "healthy"),
+    ]
     
-    # ========== Демонстрация задания на 4 ==========
-    print_separator("ЗАДАНИЕ НА 4")
+    for name, weight, height, points, division, health in teams_data:
+        team = Team(name, weight, height, points)
+        if division != "beginner":
+            team.set_division(division)
+        if health == "injured":
+            team.injure()
+        elif health == "recovering":
+            team.injure()
+            team.recover()
+        collection.add(team)
     
-    # Добавляем обратно удаленного спортсмена
-    team.add(athlete3)
+    print(f"Создана коллекция из {len(collection)} команд")
     
-    # Поиск по имени
-    print("\n1. Поиск спортсмена по имени:")
-    found = team.find_by_name("Мария Смирнова")
+    print(f"\nПоиск по имени 'Gamma':")
+    found = collection.find_by_name("Gamma")
     if found:
-        print(f"   Найден: {found.name}")
+        print(f"  Найдена: {found.name} - {found.division} - статус: {found.health_status}")
     
-    # Поиск по уровню подготовки
-    print("\n2. Поиск спортсменов по уровню подготовки 'intermediate':")
-    intermediates = team.find_by_training_level("intermediate")
-    for athlete in intermediates:
-        print(f"   - {athlete.name} (уровень: {athlete.training_level})")
+    print(f"\nПоиск по дивизиону 'intermediate':")
+    intermediate_teams = collection.find_by_division("intermediate")
+    for team in intermediate_teams:
+        print(f"  - {team.name} (очки: {team.total_points})")
     
-    # Поиск по статусу здоровья
-    print("\n3. Поиск спортсменов со статусом 'healthy':")
-    healthy = team.find_by_health_status("healthy")
-    for athlete in healthy:
-        print(f"   - {athlete.name} (здоровье: {athlete.health_status})")
+    print(f"\nПоиск здоровых команд:")
+    healthy_teams = collection.find_by_health_status("healthy")
+    for team in healthy_teams:
+        print(f"  - {team.name} (статус: {team.health_status})")
     
-    # Поиск активных спортсменов
-    print("\n4. Поиск активных спортсменов:")
-    active = team.find_active()
-    for athlete in active:
-        print(f"   - {athlete.name} (активен: {athlete.is_active})")
+    print(f"\nИспользование len(): {len(collection)} команд в коллекции")
     
-    # Поиск по производительности
-    print("\n5. Поиск спортсменов с производительностью > 100:")
-    high_performance = team.find_by_performance(100)
-    for athlete in high_performance:
-        print(f"   - {athlete.name}: производительность = {athlete.performance_score():.1f}")
+    print(f"\nИтерация по коллекции с помощью for:")
+    for i, team in enumerate(collection, 1):
+        print(f"  {i}. {team.name} - производительность: {team.performance_score()}")
+
+
+def demonstrate_advanced_features():
+    """Демонстрация расширенных возможностей (Задание на 5)."""
+    print("\nЗадание на 5 - Индексация, сортировка и фильтрация")
     
-    # Демонстрация len()
-    print(f"\n6. Количество спортсменов в команде: {len(team)}")
+    collection = TeamCollection()
     
-    # Демонстрация итерации
-    print("\n7. Итерация по команде (for item in team):")
-    for i, athlete in enumerate(team, 1):
-        print(f"   {i}. {athlete.name} - {athlete.training_level}")
+    teams = [
+        Team("Zeta", 74.0, 178.0, 180.0),
+        Team("Alpha", 70.0, 173.0, 150.0),
+        Team("Delta", 72.0, 176.0, 200.0),
+        Team("Beta", 68.0, 170.0, 120.0),
+        Team("Gamma", 76.0, 182.0, 250.0),
+    ]
     
-    # ========== Демонстрация задания на 5 ==========
-    print_separator("ЗАДАНИЕ НА 5")
+    for team in teams:
+        collection.add(team)
     
-    # Индексация
-    print("\n1. Доступ по индексу:")
-    print(f"   team[0] = {team[0].name}")
-    print(f"   team[1] = {team[1].name}")
-    print(f"   team[2] = {team[2].name}")
-    print(f"   team[-1] = {team[-1].name}")
+    print(f"Исходная коллекция ({len(collection)} команд):")
+    for i, team in enumerate(collection, 1):
+        print(f"  {i}. {team.name} (очки: {team.total_points})")
     
-    # Срез
-    print("\n2. Срез team[1:3]:")
-    for athlete in team[1:3]:
-        print(f"   - {athlete.name}")
+    print(f"\nИндексация коллекции:")
+    print(f"  collection[0] = {collection[0].name}")
+    print(f"  collection[2] = {collection[2].name}")
+    print(f"  collection[-1] = {collection[-1].name} (последний элемент)")
+    print(f"  collection[-2] = {collection[-2].name} (предпоследний элемент)")
     
-    # Удаление по индексу
-    print("\n3. Удаление по индексу (team.remove_at(2)):")
-    removed = team.remove_at(2)
-    if removed:
-        print(f"   Удален: {removed.name}")
+    try:
+        print(f"  Попытка доступа к collection[10]...")
+        print(collection[10])
+    except IndexError as e:
+        print(f"  Ошибка (ожидаемо): {e}")
     
-    print(f"\n   После удаления (всего: {len(team)}):")
-    for athlete in team:
-        print(f"   - {athlete.name}")
+    print(f"\nУдаление по индексу:")
+    removed = collection.remove_at(2)
+    print(f"  Удалена команда: {removed.name} (индекс 2)")
+    print(f"  Осталось команд: {len(collection)}")
     
-    # Восстанавливаем удаленного спортсмена
-    team.add(removed)
+    print(f"\nСортировка по имени:")
+    collection.sort_by_name()
+    for i, team in enumerate(collection, 1):
+        print(f"  {i}. {team.name}")
     
-    # Сортировка по имени
-    print("\n4. Сортировка по имени:")
-    team.sort_by_name()
-    for athlete in team:
-        print(f"   - {athlete.name}")
+    print(f"\nСортировка по очкам (по убыванию):")
+    collection.sort_by_points(reverse=True)
+    for i, team in enumerate(collection, 1):
+        print(f"  {i}. {team.name}: {team.total_points} очков")
     
-    # Сортировка по рекорду
-    print("\n5. Сортировка по личному рекорду (по убыванию):")
-    team.sort_by_record(reverse=True)
-    for athlete in team:
-        print(f"   - {athlete.name}: рекорд = {athlete.personal_record}")
+    print(f"\nФильтрация - активные команды:")
+    if len(collection) > 0:
+        collection[0].deactivate()
+    active_collection = collection.get_active_teams()
+    print(f"  Активных команд: {len(active_collection)} из {len(collection)}")
+    for team in active_collection:
+        print(f"  - {team.name} (активна: {team.is_active})")
     
-    # Сортировка по производительности
-    print("\n6. Сортировка по производительности:")
-    team.sort_by_performance(reverse=True)
-    for athlete in team:
-        print(f"   - {athlete.name}: производительность = {athlete.performance_score():.1f}")
+    print(f"\nФильтрация - здоровые команды:")
+    healthy_collection = collection.get_healthy_teams()
+    print(f"  Здоровых команд: {len(healthy_collection)} из {len(collection)}")
+    for team in healthy_collection:
+        print(f"  - {team.name} (здоровье: {team.health_status})")
     
-    # Логические операции
-    print("\n7. Логические операции над коллекцией:")
+    print("\nСценарии использования")
     
-    # Активные спортсмены
-    print("\n   Активные спортсмены:")
-    active_team = team.get_active_athletes()
-    for athlete in active_team:
-        print(f"   - {athlete.name} (активен: {athlete.is_active})")
+    print("\nСценарий 1: Управление турнирной таблицей")
+    tournament = TeamCollection()
     
-    # Деактивируем одного спортсмена
-    team[0].deactivate()
+    tournament_teams = [
+        Team("Titans", 75.0, 180.0, 100.0),
+        Team("Warriors", 72.0, 177.0, 95.0),
+        Team("Gladiators", 78.0, 183.0, 110.0),
+        Team("Spartans", 70.0, 175.0, 88.0),
+    ]
     
-    print("\n   После деактивации первого спортсмена:")
-    print("   Все спортсмены:")
-    for athlete in team:
-        status = "активен" if athlete.is_active else "неактивен"
-        print(f"   - {athlete.name}: {status}")
+    for team in tournament_teams:
+        tournament.add(team)
     
-    print("\n   Только активные:")
-    active_team = team.get_active_athletes()
-    for athlete in active_team:
-        print(f"   - {athlete.name}")
+    print("Турнирная таблица (до сортировки):")
+    for team in tournament:
+        print(f"  - {team.name}: {team.total_points} очков")
     
-    # Здоровые спортсмены
-    print("\n   Здоровые спортсмены:")
-    healthy_team = team.get_healthy_athletes()
-    for athlete in healthy_team:
-        print(f"   - {athlete.name} (здоровье: {athlete.health_status})")
+    tournament.sort_by_points(reverse=True)
+    print("\nТурнирная таблица (после сортировки по очкам):")
+    for i, team in enumerate(tournament, 1):
+        print(f"  {i}. {team.name}: {team.total_points} очков")
     
-    # Спортсмены по уровню подготовки
-    print("\n   Спортсмены уровня 'professional':")
-    pro_team = team.get_by_training_level("professional")
-    if len(pro_team) == 0:
-        print("   Нет спортсменов уровня professional")
-    else:
-        for athlete in pro_team:
-            print(f"   - {athlete.name}")
+    print("\nСценарий 2: Управление травмами и восстановлением")
+    league = TeamCollection()
     
-    # Финальный вывод
-    print_separator("ИТОГОВАЯ ИНФОРМАЦИЯ")
-    print(f"\n{team}")
+    team_a = Team("Aces", 71.0, 174.0, 150.0)
+    team_b = Team("Bulls", 73.0, 178.0, 140.0)
     
-    print("\nСписок всех спортсменов с детальной информацией:")
-    for athlete in team:
-        print(f"\n{athlete}")
-        print(f"   Производительность: {athlete.performance_score():.2f}")
-        print(f"   ИМТ: {athlete.bmi():.1f}")
+    league.add(team_a)
+    league.add(team_b)
+    
+    print("Исходное состояние:")
+    for team in league:
+        print(f"  - {team.name}: здоровье={team.health_status}, очки={team.total_points}")
+    
+    print("\nКоманда Aces получает травму")
+    team_a.injure()
+    
+    print("\nПопытка изменить очки травмированной команды:")
+    try:
+        team_a.total_points = 160.0
+    except RuntimeError as e:
+        print(f"  Ошибка: {e}")
+    
+    print("\nПроцесс восстановления:")
+    team_a.recover()
+    print(f"  Команда {team_a.name} в статусе: {team_a.health_status}")
+    
+    team_a.heal()
+    print(f"  Команда {team_a.name} полностью здорова: {team_a.health_status}")
+    
+    print("\nСценарий 3: Анализ производительности команд")
+    analysis = TeamCollection()
+    
+    performance_teams = [
+        Team("Speed", 68.0, 170.0, 180.0),
+        Team("Power", 85.0, 185.0, 150.0),
+        Team("Agility", 62.0, 165.0, 220.0),
+        Team("Endurance", 75.0, 178.0, 195.0),
+    ]
+    
+    performance_teams[0].set_division("elite")
+    performance_teams[2].set_division("professional")
+    
+    for team in performance_teams:
+        analysis.add(team)
+    
+    print("Анализ производительности команд:")
+    for team in analysis:
+        performance = team.performance_score()
+        if performance > 200:
+            rating = "Высокая"
+        elif performance > 100:
+            rating = "Средняя"
+        else:
+            rating = "Низкая"
+        print(f"  - {team.name}: {performance} очков производительности ({rating})")
+    
+    high_perf = analysis.get_high_performance_teams(threshold=150)
+    print(f"\nКоманды с высокой производительностью (>150):")
+    for team in high_perf:
+        print(f"  - {team.name}: {team.performance_score()} очков")
+    
+    print("\nДемонстрация завершена")
 
 
 if __name__ == "__main__":
-    main()
+    demonstrate_basic_operations()
+    demonstrate_search_and_iteration()
+    demonstrate_advanced_features()
