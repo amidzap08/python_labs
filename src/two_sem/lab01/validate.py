@@ -1,3 +1,4 @@
+ 
 def validate_name(name: str) -> None:
     """Проверяет, что имя - непустая строка."""
     if not isinstance(name, str) or not name.strip():
