@@ -1,16 +1,16 @@
 # Лабораторная работа №1
 
 ## Задание 1
-![Приветствие и возраст](/src/lab01/images/01.png)
+![Приветствие и возраст](/src/one_sem/lab01/images/01.png)
 
 ## Задание 2
-![Ищем сумму и среднее число](/src/lab01/images/02.png)
+![Ищем сумму и среднее число](/src/one_sem/lab01/images/02.png)
 
 ## Задание 3
-![Вычисление цен](/src/lab01/images/03.png)
+![Вычисление цен](/src/one_sem/lab01/images/03.png)
 
 ## Задание 4
-![Перевод минут в часы и дни](/src/lab01/images/04.png)
+![Перевод минут в часы и дни](/src/one_sem/lab01/images/04.png)
 
 ## Задание 5
-![ФИО](/src/lab01/images/05.png)
+![ФИО](/src/one_sem/lab01/images/05.png)

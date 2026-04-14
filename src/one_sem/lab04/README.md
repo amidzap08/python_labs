@@ -18,7 +18,7 @@ def read_text(path: str | Path, encoding: str = "utf-8") -> str:
         )
 ```
 ## Тест-кейс
-![Картинка 1](/src/lab04/images/01.04.png)
+![Картинка 1](/src/one_sem/lab04/images/01.04.png)
 
 ## Задание А(2)
 ```python
@@ -65,10 +65,10 @@ txt = read_text("data/input.txt")
 write_csv([("word","count"),("test",3)], "data/check.csv")
 ```
 ## табличка csv
-![картинка 2](/src/lab04/images/00.04.png)
+![картинка 2](/src/one_sem/lab04/images/00.04.png)
 
 ## пустой файл с заголовком("a","b") 
-![Картинка 3](/src/lab04/images/04.04.png)
+![Картинка 3](/src/one_sem/lab04/images/04.04.png)
 
 ## Задание В
 ```python
@@ -172,16 +172,16 @@ def generate_csv_report(input_file: str, output_file: str) -> None:
     print(f"Отчет сохранен в: {output_file}")
 ```
 ## Тест-кейс
-![Картинка 3](/src/lab04/images/03.04.png)
+![Картинка 3](/src/one_sem/lab04/images/03.04.png)
 
 ## если наш файл пустой,то выводит:
-![Картинка 4](/src/lab04/images/03(1).04.png)
+![Картинка 4](/src/one_sem/lab04/images/03(1).04.png)
 
 
-![картианка 5](/src/lab04/images/02.04(1).png)
+![картианка 5](/src/one_sem/lab04/images/02.04(1).png)
 
 ## Если файл не существует/не найден
 
-![Картинка 5](/src/lab04/images/03(2).04.png)
+![Картинка 5](/src/one_sem/lab04/images/03(2).04.png)
 
 ### Если файл большой читается построчно
